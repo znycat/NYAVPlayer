@@ -1,0 +1,494 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E903DEED22CB3EC200A08B36 /* NYSpeedLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = E903DEEC22CB3EC200A08B36 /* NYSpeedLoadingView.m */; };
+		E903DEF022CB3F9A00A08B36 /* NYLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = E903DEEF22CB3F9A00A08B36 /* NYLoadingView.m */; };
+		E903DEF322CB405700A08B36 /* NYNetworkSpeedMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = E903DEF222CB405700A08B36 /* NYNetworkSpeedMonitor.m */; };
+		E903DEF522CB495500A08B36 /* ZFPlayer.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E903DEF422CB495500A08B36 /* ZFPlayer.bundle */; };
+		E93AE92E22C61D4200A33805 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE92D22C61D4200A33805 /* AppDelegate.m */; };
+		E93AE93122C61D4200A33805 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE93022C61D4200A33805 /* ViewController.m */; };
+		E93AE93422C61D4200A33805 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E93AE93222C61D4200A33805 /* Main.storyboard */; };
+		E93AE93622C61D4200A33805 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E93AE93522C61D4200A33805 /* Assets.xcassets */; };
+		E93AE93922C61D4200A33805 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E93AE93722C61D4200A33805 /* LaunchScreen.storyboard */; };
+		E93AE93C22C61D4200A33805 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE93B22C61D4200A33805 /* main.m */; };
+		E93AE95222C61E5800A33805 /* NYPlayerBottomControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE94822C61E5800A33805 /* NYPlayerBottomControllerView.m */; };
+		E93AE95422C61E5800A33805 /* NYPlayerTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE94A22C61E5800A33805 /* NYPlayerTopView.m */; };
+		E93AE95622C61E5800A33805 /* NYVideoDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE94D22C61E5800A33805 /* NYVideoDetailVC.m */; };
+		E93AE95722C61E5800A33805 /* NYVideoFullScreenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE94F22C61E5800A33805 /* NYVideoFullScreenVC.m */; };
+		E9BF999322C9BA7A00E84950 /* NYAVPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999222C9BA7A00E84950 /* NYAVPlayerManager.m */; };
+		E9BF999622C9BC9F00E84950 /* NYPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999522C9BC9F00E84950 /* NYPlayerView.m */; };
+		E9BF999922C9BECD00E84950 /* NYKVOController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999822C9BECD00E84950 /* NYKVOController.m */; };
+		E9BF999D22C9BFA100E84950 /* ZFReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999C22C9BFA100E84950 /* ZFReachabilityManager.m */; };
+		E9BF99A022C9C3A100E84950 /* NYPlayerControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999F22C9C3A100E84950 /* NYPlayerControllerView.m */; };
+		E9BF99B222C9ED0C00E84950 /* NYSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF99B122C9ED0C00E84950 /* NYSliderView.m */; };
+		E9BF99B522C9EE0900E84950 /* UIView+NYFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF99B422C9EE0900E84950 /* UIView+NYFrame.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E903DEEB22CB3EC200A08B36 /* NYSpeedLoadingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYSpeedLoadingView.h; sourceTree = "<group>"; };
+		E903DEEC22CB3EC200A08B36 /* NYSpeedLoadingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYSpeedLoadingView.m; sourceTree = "<group>"; };
+		E903DEEE22CB3F9A00A08B36 /* NYLoadingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYLoadingView.h; sourceTree = "<group>"; };
+		E903DEEF22CB3F9A00A08B36 /* NYLoadingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYLoadingView.m; sourceTree = "<group>"; };
+		E903DEF122CB405700A08B36 /* NYNetworkSpeedMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYNetworkSpeedMonitor.h; sourceTree = "<group>"; };
+		E903DEF222CB405700A08B36 /* NYNetworkSpeedMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYNetworkSpeedMonitor.m; sourceTree = "<group>"; };
+		E903DEF422CB495500A08B36 /* ZFPlayer.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZFPlayer.bundle; sourceTree = "<group>"; };
+		E93AE92922C61D4200A33805 /* NYAVPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYAVPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E93AE92C22C61D4200A33805 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		E93AE92D22C61D4200A33805 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E93AE92F22C61D4200A33805 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		E93AE93022C61D4200A33805 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		E93AE93322C61D4200A33805 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E93AE93522C61D4200A33805 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E93AE93822C61D4200A33805 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E93AE93A22C61D4200A33805 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E93AE93B22C61D4200A33805 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E93AE94622C61E5800A33805 /* NYPlayerBottomControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NYPlayerBottomControllerView.h; sourceTree = "<group>"; };
+		E93AE94722C61E5800A33805 /* NYPlayerTopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NYPlayerTopView.h; sourceTree = "<group>"; };
+		E93AE94822C61E5800A33805 /* NYPlayerBottomControllerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NYPlayerBottomControllerView.m; sourceTree = "<group>"; };
+		E93AE94A22C61E5800A33805 /* NYPlayerTopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NYPlayerTopView.m; sourceTree = "<group>"; };
+		E93AE94D22C61E5800A33805 /* NYVideoDetailVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NYVideoDetailVC.m; sourceTree = "<group>"; };
+		E93AE94E22C61E5800A33805 /* NYVideoFullScreenVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NYVideoFullScreenVC.h; sourceTree = "<group>"; };
+		E93AE94F22C61E5800A33805 /* NYVideoFullScreenVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NYVideoFullScreenVC.m; sourceTree = "<group>"; };
+		E93AE95022C61E5800A33805 /* NYVideoDetailVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NYVideoDetailVC.h; sourceTree = "<group>"; };
+		E9BF999122C9BA7A00E84950 /* NYAVPlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYAVPlayerManager.h; sourceTree = "<group>"; };
+		E9BF999222C9BA7A00E84950 /* NYAVPlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYAVPlayerManager.m; sourceTree = "<group>"; };
+		E9BF999422C9BC9F00E84950 /* NYPlayerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYPlayerView.h; sourceTree = "<group>"; };
+		E9BF999522C9BC9F00E84950 /* NYPlayerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYPlayerView.m; sourceTree = "<group>"; };
+		E9BF999722C9BECD00E84950 /* NYKVOController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYKVOController.h; sourceTree = "<group>"; };
+		E9BF999822C9BECD00E84950 /* NYKVOController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYKVOController.m; sourceTree = "<group>"; };
+		E9BF999B22C9BFA100E84950 /* ZFReachabilityManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFReachabilityManager.h; sourceTree = "<group>"; };
+		E9BF999C22C9BFA100E84950 /* ZFReachabilityManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFReachabilityManager.m; sourceTree = "<group>"; };
+		E9BF999E22C9C3A100E84950 /* NYPlayerControllerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYPlayerControllerView.h; sourceTree = "<group>"; };
+		E9BF999F22C9C3A100E84950 /* NYPlayerControllerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYPlayerControllerView.m; sourceTree = "<group>"; };
+		E9BF99B022C9ED0C00E84950 /* NYSliderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYSliderView.h; sourceTree = "<group>"; };
+		E9BF99B122C9ED0C00E84950 /* NYSliderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYSliderView.m; sourceTree = "<group>"; };
+		E9BF99B322C9EE0900E84950 /* UIView+NYFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+NYFrame.h"; sourceTree = "<group>"; };
+		E9BF99B422C9EE0900E84950 /* UIView+NYFrame.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+NYFrame.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E93AE92622C61D4200A33805 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E903DEF622CB4C3400A08B36 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E9BF999422C9BC9F00E84950 /* NYPlayerView.h */,
+				E9BF999522C9BC9F00E84950 /* NYPlayerView.m */,
+				E9BF99B022C9ED0C00E84950 /* NYSliderView.h */,
+				E9BF99B122C9ED0C00E84950 /* NYSliderView.m */,
+				E903DEEB22CB3EC200A08B36 /* NYSpeedLoadingView.h */,
+				E903DEEC22CB3EC200A08B36 /* NYSpeedLoadingView.m */,
+				E903DEEE22CB3F9A00A08B36 /* NYLoadingView.h */,
+				E903DEEF22CB3F9A00A08B36 /* NYLoadingView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E93AE92022C61D4200A33805 = {
+			isa = PBXGroup;
+			children = (
+				E93AE92B22C61D4200A33805 /* NYAVPlayer */,
+				E93AE92A22C61D4200A33805 /* Products */,
+				E9BF99A222C9D32E00E84950 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E93AE92A22C61D4200A33805 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E93AE92922C61D4200A33805 /* NYAVPlayer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E93AE92B22C61D4200A33805 /* NYAVPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				E93AE92C22C61D4200A33805 /* AppDelegate.h */,
+				E93AE92D22C61D4200A33805 /* AppDelegate.m */,
+				E93AE94222C61E5800A33805 /* NYPlayer */,
+				E93AE92F22C61D4200A33805 /* ViewController.h */,
+				E93AE93022C61D4200A33805 /* ViewController.m */,
+				E93AE93222C61D4200A33805 /* Main.storyboard */,
+				E93AE93522C61D4200A33805 /* Assets.xcassets */,
+				E93AE93722C61D4200A33805 /* LaunchScreen.storyboard */,
+				E93AE93A22C61D4200A33805 /* Info.plist */,
+				E93AE93B22C61D4200A33805 /* main.m */,
+			);
+			path = NYAVPlayer;
+			sourceTree = "<group>";
+		};
+		E93AE94222C61E5800A33805 /* NYPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				E9BF99A122C9C5FB00E84950 /* MediaPlayBackManager */,
+				E9BF999A22C9BF8400E84950 /* Tool */,
+				E93AE94322C61E5800A33805 /* Other */,
+				E93AE94422C61E5800A33805 /* View */,
+				E93AE94B22C61E5800A33805 /* ViewController */,
+			);
+			path = NYPlayer;
+			sourceTree = "<group>";
+		};
+		E93AE94322C61E5800A33805 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				E903DEF422CB495500A08B36 /* ZFPlayer.bundle */,
+				E9BF99B322C9EE0900E84950 /* UIView+NYFrame.h */,
+				E9BF99B422C9EE0900E84950 /* UIView+NYFrame.m */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		E93AE94422C61E5800A33805 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E93AE94622C61E5800A33805 /* NYPlayerBottomControllerView.h */,
+				E93AE94822C61E5800A33805 /* NYPlayerBottomControllerView.m */,
+				E93AE94722C61E5800A33805 /* NYPlayerTopView.h */,
+				E93AE94A22C61E5800A33805 /* NYPlayerTopView.m */,
+				E9BF999E22C9C3A100E84950 /* NYPlayerControllerView.h */,
+				E9BF999F22C9C3A100E84950 /* NYPlayerControllerView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E93AE94B22C61E5800A33805 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				E93AE95022C61E5800A33805 /* NYVideoDetailVC.h */,
+				E93AE94D22C61E5800A33805 /* NYVideoDetailVC.m */,
+				E93AE94E22C61E5800A33805 /* NYVideoFullScreenVC.h */,
+				E93AE94F22C61E5800A33805 /* NYVideoFullScreenVC.m */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		E9BF999A22C9BF8400E84950 /* Tool */ = {
+			isa = PBXGroup;
+			children = (
+				E9BF999722C9BECD00E84950 /* NYKVOController.h */,
+				E9BF999822C9BECD00E84950 /* NYKVOController.m */,
+				E9BF999B22C9BFA100E84950 /* ZFReachabilityManager.h */,
+				E9BF999C22C9BFA100E84950 /* ZFReachabilityManager.m */,
+				E903DEF122CB405700A08B36 /* NYNetworkSpeedMonitor.h */,
+				E903DEF222CB405700A08B36 /* NYNetworkSpeedMonitor.m */,
+			);
+			path = Tool;
+			sourceTree = "<group>";
+		};
+		E9BF99A122C9C5FB00E84950 /* MediaPlayBackManager */ = {
+			isa = PBXGroup;
+			children = (
+				E903DEF622CB4C3400A08B36 /* View */,
+				E9BF999122C9BA7A00E84950 /* NYAVPlayerManager.h */,
+				E9BF999222C9BA7A00E84950 /* NYAVPlayerManager.m */,
+			);
+			path = MediaPlayBackManager;
+			sourceTree = "<group>";
+		};
+		E9BF99A222C9D32E00E84950 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E93AE92822C61D4200A33805 /* NYAVPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E93AE93F22C61D4200A33805 /* Build configuration list for PBXNativeTarget "NYAVPlayer" */;
+			buildPhases = (
+				E93AE92522C61D4200A33805 /* Sources */,
+				E93AE92622C61D4200A33805 /* Frameworks */,
+				E93AE92722C61D4200A33805 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NYAVPlayer;
+			productName = NYAVPlayer;
+			productReference = E93AE92922C61D4200A33805 /* NYAVPlayer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E93AE92122C61D4200A33805 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1020;
+				ORGANIZATIONNAME = "翟乃玉";
+				TargetAttributes = {
+					E93AE92822C61D4200A33805 = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
+				};
+			};
+			buildConfigurationList = E93AE92422C61D4200A33805 /* Build configuration list for PBXProject "NYAVPlayer" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E93AE92022C61D4200A33805;
+			productRefGroup = E93AE92A22C61D4200A33805 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E93AE92822C61D4200A33805 /* NYAVPlayer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E93AE92722C61D4200A33805 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E903DEF522CB495500A08B36 /* ZFPlayer.bundle in Resources */,
+				E93AE93922C61D4200A33805 /* LaunchScreen.storyboard in Resources */,
+				E93AE93622C61D4200A33805 /* Assets.xcassets in Resources */,
+				E93AE93422C61D4200A33805 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E93AE92522C61D4200A33805 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E93AE93122C61D4200A33805 /* ViewController.m in Sources */,
+				E9BF99B522C9EE0900E84950 /* UIView+NYFrame.m in Sources */,
+				E903DEED22CB3EC200A08B36 /* NYSpeedLoadingView.m in Sources */,
+				E903DEF322CB405700A08B36 /* NYNetworkSpeedMonitor.m in Sources */,
+				E9BF99B222C9ED0C00E84950 /* NYSliderView.m in Sources */,
+				E9BF999D22C9BFA100E84950 /* ZFReachabilityManager.m in Sources */,
+				E93AE95222C61E5800A33805 /* NYPlayerBottomControllerView.m in Sources */,
+				E93AE95722C61E5800A33805 /* NYVideoFullScreenVC.m in Sources */,
+				E93AE95422C61E5800A33805 /* NYPlayerTopView.m in Sources */,
+				E93AE93C22C61D4200A33805 /* main.m in Sources */,
+				E9BF999322C9BA7A00E84950 /* NYAVPlayerManager.m in Sources */,
+				E903DEF022CB3F9A00A08B36 /* NYLoadingView.m in Sources */,
+				E9BF99A022C9C3A100E84950 /* NYPlayerControllerView.m in Sources */,
+				E9BF999622C9BC9F00E84950 /* NYPlayerView.m in Sources */,
+				E93AE92E22C61D4200A33805 /* AppDelegate.m in Sources */,
+				E93AE95622C61E5800A33805 /* NYVideoDetailVC.m in Sources */,
+				E9BF999922C9BECD00E84950 /* NYKVOController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E93AE93222C61D4200A33805 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E93AE93322C61D4200A33805 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		E93AE93722C61D4200A33805 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E93AE93822C61D4200A33805 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E93AE93D22C61D4200A33805 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		E93AE93E22C61D4200A33805 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E93AE94022C61D4200A33805 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HSM83HKXF7;
+				INFOPLIST_FILE = NYAVPlayer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sina.PlayerIJKPlayer.NYAVPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E93AE94122C61D4200A33805 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HSM83HKXF7;
+				INFOPLIST_FILE = NYAVPlayer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sina.PlayerIJKPlayer.NYAVPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E93AE92422C61D4200A33805 /* Build configuration list for PBXProject "NYAVPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E93AE93D22C61D4200A33805 /* Debug */,
+				E93AE93E22C61D4200A33805 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E93AE93F22C61D4200A33805 /* Build configuration list for PBXNativeTarget "NYAVPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E93AE94022C61D4200A33805 /* Debug */,
+				E93AE94122C61D4200A33805 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E93AE92122C61D4200A33805 /* Project object */;
+}
