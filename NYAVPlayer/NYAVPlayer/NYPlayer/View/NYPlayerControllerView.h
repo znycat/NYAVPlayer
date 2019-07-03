@@ -36,6 +36,9 @@ typedef NS_ENUM(NSUInteger, NYPlayererViewStyle) {
 @property(nonatomic,weak)NYVideoFullScreenVC *fullScreenVC;
 
 @property(nonatomic,assign)NYPlayererViewStyle playerViewStyle;
+
+/// 停止播放 移除
+-(void)stop;
 @end
 
 NS_ASSUME_NONNULL_END

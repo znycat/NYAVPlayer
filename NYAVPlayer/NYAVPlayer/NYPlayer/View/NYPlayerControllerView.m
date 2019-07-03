@@ -160,6 +160,7 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
 }
 
 -(void)setUrlStr:(NSString *)urlStr{
+    _urlStr = urlStr;
     self.currentManager = [[NYAVPlayerManager alloc] init];
     self.currentManager.shouldAutoPlay = NO;
     self.currentManager.assetURL = [NSURL URLWithString:urlStr];
@@ -323,7 +324,7 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
     [[UIApplication sharedApplication].keyWindow addSubview:smallView];
     self.smallView = smallView;
     [[UIApplication sharedApplication].keyWindow addSubview:self];
-    [self.detailVC dismissViewControllerAnimated:YES completion:nil];
+    [self.detailVC dismissViewControllerAnimated:NO completion:nil];
     NSString *smallCenterSty = [[NSUserDefaults standardUserDefaults] objectForKey:NYSmallViewCenterStringKey];
     if ([smallCenterSty isKindOfClass:NSString.class]) {
         self.smallView.center = CGPointFromString(smallCenterSty);
@@ -390,5 +391,11 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
         self.topView.hidden = YES;
         self.bottomControllerView.hidden = YES;
     }
+}
+
+/// 停止播放 移除
+-(void)stop{
+    [self.currentManager stop];
+    [self removeFromSuperview];
 }
 @end
