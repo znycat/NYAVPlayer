@@ -28,7 +28,6 @@ typedef NS_ENUM(NSUInteger, NYPlayererViewStyle) {
     NYPlayererViewStyleSmall,//小窗状态
 };
 @interface NYPlayerControllerView : UIView
-@property(nonatomic,copy)void(^topSmallBtnClickBlock)(NYPlayerControllerView *playerView,NYPlayerTopView *topView);
 @property(nonatomic,copy)void(^topDownloadBtnClickBlock)(NYPlayerControllerView *playerView,NYPlayerTopView *topView);
 
 @property(nonatomic,copy)NSString *urlStr;

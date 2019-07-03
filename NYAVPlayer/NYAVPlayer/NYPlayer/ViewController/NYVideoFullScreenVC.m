@@ -7,7 +7,7 @@
 //
 
 #import "NYVideoFullScreenVC.h"
-
+#import "NYPlayerControllerView.h"
 @interface NYVideoFullScreenVC ()
 @property(nonatomic, assign)BOOL isLeft;
 @property(nonatomic, weak)NYPlayerControllerView *playerView;
@@ -45,5 +45,20 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor redColor];
 }
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+}
 
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    self.playerView.playerViewStyle = NYPlayererViewStyleFullScreen;
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+}
 @end

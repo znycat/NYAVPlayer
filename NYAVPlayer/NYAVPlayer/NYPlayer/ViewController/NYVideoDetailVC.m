@@ -19,28 +19,16 @@
     self.view.backgroundColor = [UIColor yellowColor];
     
     NYPlayerControllerView *playerView = [[NYPlayerControllerView alloc] init];
+    playerView.playerViewStyle = NYPlayererViewStyleDetail;
     [self.view addSubview:playerView];
     self.playerView = playerView;
     playerView.frame = self.view.bounds;
     playerView.detailVC = self;
-    playerView.urlStr = @"";
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        playerView.urlStr = @"";
+    });
+//    playerView.urlStr = @"";
 
 }
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-//    [self dismissViewControllerAnimated:YES completion:nil];
-}
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-}
-- (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    
-}
--(void)viewWillDisappear:(BOOL)animated{
-    [super viewWillDisappear:animated];
-    
-}
-
-
 
 @end

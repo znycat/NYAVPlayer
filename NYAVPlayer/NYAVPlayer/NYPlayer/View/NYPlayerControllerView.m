@@ -9,9 +9,10 @@
 #import "NYPlayerControllerView.h"
 #import "NYAVPlayerManager.h"
 #import "NYSpeedLoadingView.h"
+#import "NYSmallView.h"
 
+static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallViewCenterStringKey";
 @interface NYPlayerControllerView()
-
 /// 顶部View
 @property(nonatomic, weak)NYPlayerTopView *topView;
 /// 底部View
@@ -24,6 +25,9 @@
 @property (nonatomic, strong) UIButton *playOrPauseBtn;
 
 @property (nonatomic, strong) id <NYPlayerMediaPlayback> currentManager;
+
+/// 小窗容器View
+@property (nonatomic, weak)NYSmallView *smallView;
 @end
 @implementation NYPlayerControllerView
 #pragma mark - cycle
@@ -73,14 +77,14 @@
     [self.topView setBackBtnClickBlock:^(NYPlayerTopView * _Nonnull topView) {
         @strongify(self)
         if (self.fullScreenVC) {
-            [self quitFullScreen];
+            [self quitFullScreenAnimated:YES];
         }else{
             [self.detailVC dismissViewControllerAnimated:YES completion:nil];
         }
     }];
     [self.topView setSmallBtnClickBlock:^(NYPlayerTopView * _Nonnull topView) {
         @strongify(self)
-        if(self.topSmallBtnClickBlock)self.topSmallBtnClickBlock(self, topView);
+        [self goSmallViewAnimated:YES];
     }];
     [self.topView setDownloadBtnClickBlock:^(NYPlayerTopView * _Nonnull topView) {
         @strongify(self)
@@ -94,7 +98,7 @@
     
     [self.bottomControllerView setFullScreenBtnBlock:^(NYPlayerBottomControllerView * _Nonnull bottomView) {
         @strongify(self)
-        [self toFullScreenWithisLeft:NO];
+        [self goFullScreenWithisLeft:NO animated:YES];
     }];
 }
 
@@ -152,6 +156,7 @@
 
 -(void)setUrlStr:(NSString *)urlStr{
     self.currentManager = [[NYAVPlayerManager alloc] init];
+    self.currentManager.shouldAutoPlay = NO;
     urlStr = @"https://www.apple.com/105/media/us/mac/family/2018/46c4b917_abfd_45a3_9b51_4e3054191797/films/grimes/mac-grimes-tpl-cc-us-2018_1280x720h.mp4";
     self.currentManager.assetURL = [NSURL URLWithString:urlStr];
     //    self.currentManager.muted = NO;
@@ -276,28 +281,113 @@
     UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
     if (deviceOrientation == UIDeviceOrientationLandscapeLeft) {
         NSLog(@"左边");
-        [self toFullScreenWithisLeft:NO];
+        [self goFullScreenWithisLeft:NO animated:YES];
     }else if(deviceOrientation == UIDeviceOrientationPortrait){
         NSLog(@"竖着");
-        [self quitFullScreen];
+        [self quitFullScreenAnimated:YES];
     }else if(deviceOrientation == UIDeviceOrientationLandscapeRight){
         NSLog(@"右边");
-        [self toFullScreenWithisLeft:YES];
+        [self goFullScreenWithisLeft:YES animated:YES];
     }else{
         NSLog(@"其他");
     }
 }
 
-//进入全屏模式
--(void)toFullScreenWithisLeft:(BOOL)isLeft{
+/// 进入全屏模式
+-(void)goFullScreenWithisLeft:(BOOL)isLeft animated:(BOOL)animated{
+    if (animated) {
+        self.playerViewStyle = NYPlayererViewStyleAnimating;
+    }
     NYVideoFullScreenVC *vc = [[NYVideoFullScreenVC alloc] initWithPlayerView:self isLeft:isLeft];
-    [self.detailVC presentViewController:vc animated:YES completion:nil];
+    [self.detailVC presentViewController:vc animated:animated completion:nil];
     self.fullScreenVC = vc;
 }
-//退出全屏模式
--(void)quitFullScreen{
+/// 退出全屏模式
+-(void)quitFullScreenAnimated:(BOOL)animated{
+    if (animated) {
+        self.playerViewStyle = NYPlayererViewStyleAnimating;
+    }
     if (self.fullScreenVC) {
-        [self.fullScreenVC dismissViewControllerAnimated:YES completion:nil];
+        [self.fullScreenVC dismissViewControllerAnimated:YES completion:^{
+            self.playerViewStyle = NYPlayererViewStyleDetail;
+        }];
+    }
+}
+/// 去小窗
+-(void)goSmallViewAnimated:(BOOL)animated{
+    NYSmallView *smallView = [[NYSmallView alloc] initWithFrame:CGRectMake(10, 100, 150, 150)];
+    [[UIApplication sharedApplication].keyWindow addSubview:smallView];
+    self.smallView = smallView;
+    [[UIApplication sharedApplication].keyWindow addSubview:self];
+    [self.detailVC dismissViewControllerAnimated:YES completion:nil];
+    NSString *smallCenterSty = [[NSUserDefaults standardUserDefaults] objectForKey:NYSmallViewCenterStringKey];
+    if ([smallCenterSty isKindOfClass:NSString.class]) {
+        self.smallView.center = CGPointFromString(smallCenterSty);
+    }
+    
+    @weakify(self)
+    [smallView setCloseBtnClickBlock:^(NYSmallView * _Nonnull smallView) {
+        @strongify(self)
+        [self closeSmallView];
+    }];
+    
+    if (animated) {
+        self.smallView.hidden = YES;
+        self.playerViewStyle = NYPlayererViewStyleAnimating;
+        [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionLayoutSubviews animations:^{
+            self.frame = self.smallView.frame;
+            self.smallView.frame = self.smallView.frame;
+        } completion:^(BOOL finished) {
+            self.smallView.hidden = NO;
+            [self.smallView insertSubview:self atIndex:0];
+            self.frame = self.smallView.bounds;
+            self.smallView.frame = self.smallView.frame;
+            self.playerViewStyle = NYPlayererViewStyleSmall;
+        }];
+    }else{
+        self.smallView.hidden = NO;
+        [self.smallView insertSubview:self atIndex:0];
+        self.frame = self.smallView.bounds;
+        self.smallView.frame = self.smallView.frame;
+        self.playerViewStyle = NYPlayererViewStyleSmall;
+    }
+}
+/// 关闭小窗
+-(void)closeSmallView{
+    [self.smallView removeFromSuperview];
+    NSString *smallViewCenterStr = NSStringFromCGPoint(self.smallView.center);
+    [[NSUserDefaults standardUserDefaults] setObject:smallViewCenterStr forKey:NYSmallViewCenterStringKey];
+}
+
+
+
+-(void)setPlayerViewStyle:(NYPlayererViewStyle)playerViewStyle{
+    if (_playerViewStyle == playerViewStyle) {
+        return;
+    }
+    _playerViewStyle = playerViewStyle;
+    if (playerViewStyle == NYPlayererViewStyleNone) {//此状态 无控制 只有站位图和播放状态显示
+        self.topView.hidden = YES;
+        self.bottomControllerView.hidden = YES;
+        
+    }else if (playerViewStyle == NYPlayererViewStyleAnimating) {//在动画中
+        self.topView.hidden = YES;
+        self.bottomControllerView.hidden = YES;
+        
+    }else if (playerViewStyle == NYPlayererViewStyleFullScreen) {//全屏状态
+        self.topView.hidden = NO;
+        self.bottomControllerView.hidden = NO;
+        self.topView.downloadBtn.hidden = NO;
+        self.topView.smallBtn.hidden = YES;
+    }else if (playerViewStyle == NYPlayererViewStyleDetail) {//竖屏 详情状态
+        self.topView.hidden = NO;
+        self.bottomControllerView.hidden = NO;
+        self.topView.downloadBtn.hidden = YES;
+        self.topView.smallBtn.hidden = NO;
+        
+    }else if (playerViewStyle == NYPlayererViewStyleSmall) {//小窗状态
+        self.topView.hidden = YES;
+        self.bottomControllerView.hidden = YES;
     }
 }
 @end
