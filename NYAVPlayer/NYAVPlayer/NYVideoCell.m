@@ -10,7 +10,7 @@
 #import "NYPlayerControllerView.h"
 #import "NYVideoDetailVC.h"
 @interface NYVideoCell ()
-@property(nonatomic, weak)NYPlayerControllerView *playerView;
+
 @end
 @implementation NYVideoCell
 
@@ -40,4 +40,10 @@
     playerView.urlStr = self.urlStr;
 }
 
+-(void)setUrlStr:(NSString *)urlStr{
+    if (![urlStr isEqualToString:urlStr]) {
+        [self.playerView removeFromSuperview];
+    }
+    _urlStr = urlStr;
+}
 @end

@@ -35,9 +35,9 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     NYVideoCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(NYVideoCell.class) forIndexPath:indexPath];
+    
     cell.label.text = [NSString stringWithFormat:@"视频：%ld",(long)indexPath.row];
     cell.urlStr = self.assetURLs[indexPath.row].absoluteString;
-    
     
     return cell;
 }

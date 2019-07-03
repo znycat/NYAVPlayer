@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class NYPlayerControllerView;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NYVideoCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @property (weak, nonatomic) IBOutlet UIImageView *videoImageV;
 @property (nonatomic, copy)NSString *urlStr;
-
+@property(nonatomic, weak)NYPlayerControllerView *playerView;
 @end
 
 NS_ASSUME_NONNULL_END
