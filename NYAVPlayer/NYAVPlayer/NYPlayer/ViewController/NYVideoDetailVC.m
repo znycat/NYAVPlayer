@@ -13,22 +13,36 @@
 @end
 
 @implementation NYVideoDetailVC
+- (instancetype)initWithPlayerView:(NYPlayerControllerView *)playerView{
+    self = [super init];
+    if (self) {
+        playerView.detailVC = self;
+        self.playerView = playerView;
+        self.modalPresentationStyle = UIModalPresentationFullScreen;
+        self.transition = [[NYVideoDetailTransition alloc] initWithPlayerView:playerView];
+        self.transitioningDelegate = self.transition;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor yellowColor];
-    
-    NYPlayerControllerView *playerView = [[NYPlayerControllerView alloc] init];
-    playerView.playerViewStyle = NYPlayererViewStyleDetail;
-    [self.view addSubview:playerView];
-    self.playerView = playerView;
-    playerView.frame = self.view.bounds;
-    playerView.detailVC = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        playerView.urlStr = @"";
-    });
-//    playerView.urlStr = @"";
-
+}
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
 }
 
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    self.playerView.playerViewStyle = NYPlayererViewStyleDetail;
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+}
 @end

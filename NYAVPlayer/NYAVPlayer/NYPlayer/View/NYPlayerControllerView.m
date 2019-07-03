@@ -39,9 +39,9 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
 {
     self = [super init];
     if (self) {
-        self.playerViewStyle = NYPlayererViewStyleNone;
         [self setupUI];
         [self setupClick];
+        self.playerViewStyle = NYPlayererViewStyleNone;
     }
     return self;
 }
@@ -79,7 +79,12 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
         if (self.fullScreenVC) {
             [self quitFullScreenAnimated:YES];
         }else{
-            [self.detailVC dismissViewControllerAnimated:YES completion:nil];
+            self.playerViewStyle = NYPlayererViewStyleAnimating;
+            [self.detailVC dismissViewControllerAnimated:YES completion:^{
+                @strongify(self)
+                self.playerViewStyle = NYPlayererViewStyleNone;
+                self.detailVC = nil;
+            }];
         }
     }];
     [self.topView setSmallBtnClickBlock:^(NYPlayerTopView * _Nonnull topView) {
@@ -157,7 +162,6 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
 -(void)setUrlStr:(NSString *)urlStr{
     self.currentManager = [[NYAVPlayerManager alloc] init];
     self.currentManager.shouldAutoPlay = NO;
-    urlStr = @"https://www.apple.com/105/media/us/mac/family/2018/46c4b917_abfd_45a3_9b51_4e3054191797/films/grimes/mac-grimes-tpl-cc-us-2018_1280x720h.mp4";
     self.currentManager.assetURL = [NSURL URLWithString:urlStr];
     //    self.currentManager.muted = NO;
     //    self.currentManager.volume = 1;
@@ -362,9 +366,6 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
 
 
 -(void)setPlayerViewStyle:(NYPlayererViewStyle)playerViewStyle{
-    if (_playerViewStyle == playerViewStyle) {
-        return;
-    }
     _playerViewStyle = playerViewStyle;
     if (playerViewStyle == NYPlayererViewStyleNone) {//此状态 无控制 只有站位图和播放状态显示
         self.topView.hidden = YES;

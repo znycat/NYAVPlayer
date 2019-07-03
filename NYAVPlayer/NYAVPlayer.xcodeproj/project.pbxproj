@@ -23,6 +23,9 @@
 		E93AE95722C61E5800A33805 /* NYVideoFullScreenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE94F22C61E5800A33805 /* NYVideoFullScreenVC.m */; };
 		E9935E6B22CC456A005AFBE3 /* NYFullTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E9935E6A22CC456A005AFBE3 /* NYFullTransition.m */; };
 		E9935E6E22CC8FC1005AFBE3 /* NYSmallView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9935E6D22CC8FC1005AFBE3 /* NYSmallView.m */; };
+		E9935E7222CCA524005AFBE3 /* NYVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E9935E7022CCA524005AFBE3 /* NYVideoCell.m */; };
+		E9935E7322CCA524005AFBE3 /* NYVideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9935E7122CCA524005AFBE3 /* NYVideoCell.xib */; };
+		E9935E7622CCAE55005AFBE3 /* NYVideoDetailTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E9935E7522CCAE55005AFBE3 /* NYVideoDetailTransition.m */; };
 		E9BF999322C9BA7A00E84950 /* NYAVPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999222C9BA7A00E84950 /* NYAVPlayerManager.m */; };
 		E9BF999622C9BC9F00E84950 /* NYPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999522C9BC9F00E84950 /* NYPlayerView.m */; };
 		E9BF999922C9BECD00E84950 /* NYKVOController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999822C9BECD00E84950 /* NYKVOController.m */; };
@@ -62,6 +65,11 @@
 		E9935E6A22CC456A005AFBE3 /* NYFullTransition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYFullTransition.m; sourceTree = "<group>"; };
 		E9935E6C22CC8FC1005AFBE3 /* NYSmallView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYSmallView.h; sourceTree = "<group>"; };
 		E9935E6D22CC8FC1005AFBE3 /* NYSmallView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYSmallView.m; sourceTree = "<group>"; };
+		E9935E6F22CCA524005AFBE3 /* NYVideoCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYVideoCell.h; sourceTree = "<group>"; };
+		E9935E7022CCA524005AFBE3 /* NYVideoCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYVideoCell.m; sourceTree = "<group>"; };
+		E9935E7122CCA524005AFBE3 /* NYVideoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NYVideoCell.xib; sourceTree = "<group>"; };
+		E9935E7422CCAE55005AFBE3 /* NYVideoDetailTransition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYVideoDetailTransition.h; sourceTree = "<group>"; };
+		E9935E7522CCAE55005AFBE3 /* NYVideoDetailTransition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYVideoDetailTransition.m; sourceTree = "<group>"; };
 		E9BF999122C9BA7A00E84950 /* NYAVPlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYAVPlayerManager.h; sourceTree = "<group>"; };
 		E9BF999222C9BA7A00E84950 /* NYAVPlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYAVPlayerManager.m; sourceTree = "<group>"; };
 		E9BF999422C9BC9F00E84950 /* NYPlayerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYPlayerView.h; sourceTree = "<group>"; };
@@ -129,6 +137,9 @@
 				E93AE94222C61E5800A33805 /* NYPlayer */,
 				E93AE92F22C61D4200A33805 /* ViewController.h */,
 				E93AE93022C61D4200A33805 /* ViewController.m */,
+				E9935E6F22CCA524005AFBE3 /* NYVideoCell.h */,
+				E9935E7022CCA524005AFBE3 /* NYVideoCell.m */,
+				E9935E7122CCA524005AFBE3 /* NYVideoCell.xib */,
 				E93AE93222C61D4200A33805 /* Main.storyboard */,
 				E93AE93522C61D4200A33805 /* Assets.xcassets */,
 				E93AE93722C61D4200A33805 /* LaunchScreen.storyboard */,
@@ -163,14 +174,14 @@
 		E93AE94422C61E5800A33805 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				E9935E6C22CC8FC1005AFBE3 /* NYSmallView.h */,
+				E9935E6D22CC8FC1005AFBE3 /* NYSmallView.m */,
 				E93AE94622C61E5800A33805 /* NYPlayerBottomControllerView.h */,
 				E93AE94822C61E5800A33805 /* NYPlayerBottomControllerView.m */,
 				E93AE94722C61E5800A33805 /* NYPlayerTopView.h */,
 				E93AE94A22C61E5800A33805 /* NYPlayerTopView.m */,
 				E9BF999E22C9C3A100E84950 /* NYPlayerControllerView.h */,
 				E9BF999F22C9C3A100E84950 /* NYPlayerControllerView.m */,
-				E9935E6C22CC8FC1005AFBE3 /* NYSmallView.h */,
-				E9935E6D22CC8FC1005AFBE3 /* NYSmallView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -192,6 +203,8 @@
 			children = (
 				E9935E6922CC456A005AFBE3 /* NYFullTransition.h */,
 				E9935E6A22CC456A005AFBE3 /* NYFullTransition.m */,
+				E9935E7422CCAE55005AFBE3 /* NYVideoDetailTransition.h */,
+				E9935E7522CCAE55005AFBE3 /* NYVideoDetailTransition.m */,
 			);
 			path = transition;
 			sourceTree = "<group>";
@@ -286,6 +299,7 @@
 				E903DEF522CB495500A08B36 /* ZFPlayer.bundle in Resources */,
 				E93AE93922C61D4200A33805 /* LaunchScreen.storyboard in Resources */,
 				E93AE93622C61D4200A33805 /* Assets.xcassets in Resources */,
+				E9935E7322CCA524005AFBE3 /* NYVideoCell.xib in Resources */,
 				E93AE93422C61D4200A33805 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,6 +321,8 @@
 				E93AE95722C61E5800A33805 /* NYVideoFullScreenVC.m in Sources */,
 				E93AE95422C61E5800A33805 /* NYPlayerTopView.m in Sources */,
 				E93AE93C22C61D4200A33805 /* main.m in Sources */,
+				E9935E7222CCA524005AFBE3 /* NYVideoCell.m in Sources */,
+				E9935E7622CCAE55005AFBE3 /* NYVideoDetailTransition.m in Sources */,
 				E9BF999322C9BA7A00E84950 /* NYAVPlayerManager.m in Sources */,
 				E903DEF022CB3F9A00A08B36 /* NYLoadingView.m in Sources */,
 				E9BF99A022C9C3A100E84950 /* NYPlayerControllerView.m in Sources */,

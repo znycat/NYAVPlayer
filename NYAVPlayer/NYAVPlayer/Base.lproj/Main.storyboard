@@ -21,17 +21,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="09p-1s-CXk">
-                                <rect key="frame" x="241" y="80" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="aaa:" destination="BYZ-38-t0r" eventType="touchUpInside" id="e8E-dU-JRg"/>
-                                </connections>
-                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9f3-wo-3d0">
+                                <rect key="frame" x="20" y="44" width="374" height="818"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="9f3-wo-3d0" secondAttribute="trailing" id="M37-Zq-aen"/>
+                            <constraint firstItem="s1c-oP-P2i" firstAttribute="top" secondItem="9f3-wo-3d0" secondAttribute="bottom" id="jmM-4k-gOu"/>
+                            <constraint firstItem="9f3-wo-3d0" firstAttribute="top" secondItem="9nw-yg-uzB" secondAttribute="bottom" id="pH6-56-uFn"/>
+                            <constraint firstItem="9f3-wo-3d0" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="vT8-49-g9R"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="9f3-wo-3d0" id="vAv-9w-ygz"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
