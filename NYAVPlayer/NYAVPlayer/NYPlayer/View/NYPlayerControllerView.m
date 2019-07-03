@@ -9,6 +9,7 @@
 #import "NYPlayerControllerView.h"
 #import "NYAVPlayerManager.h"
 #import "NYSpeedLoadingView.h"
+
 @interface NYPlayerControllerView()
 
 /// 顶部View
@@ -34,6 +35,7 @@
 {
     self = [super init];
     if (self) {
+        self.playerViewStyle = NYPlayererViewStyleNone;
         [self setupUI];
         [self setupClick];
     }
@@ -70,7 +72,11 @@
     /** 顶部回调*/
     [self.topView setBackBtnClickBlock:^(NYPlayerTopView * _Nonnull topView) {
         @strongify(self)
-        [self.detailVC dismissViewControllerAnimated:YES completion:nil];
+        if (self.fullScreenVC) {
+            [self quitFullScreen];
+        }else{
+            [self.detailVC dismissViewControllerAnimated:YES completion:nil];
+        }
     }];
     [self.topView setSmallBtnClickBlock:^(NYPlayerTopView * _Nonnull topView) {
         @strongify(self)
@@ -87,7 +93,8 @@
     }];
     
     [self.bottomControllerView setFullScreenBtnBlock:^(NYPlayerBottomControllerView * _Nonnull bottomView) {
-        //        @strongify(self)
+        @strongify(self)
+        [self toFullScreenWithisLeft:NO];
     }];
 }
 
@@ -234,6 +241,16 @@
 
     }];
     
+    [self addNotification];
+    
+    
+}
+
+-(void)addNotification{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+-(void)removeNotification{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - click
@@ -254,4 +271,33 @@
     self.playOrPauseBtn.selected = selected;
 }
 
+#pragma mark - UIDeviceOrientationDidChangeNotification
+-(void)deviceOrientationDidChange:(NSNotification *)notification{
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    if (deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+        NSLog(@"左边");
+        [self toFullScreenWithisLeft:NO];
+    }else if(deviceOrientation == UIDeviceOrientationPortrait){
+        NSLog(@"竖着");
+        [self quitFullScreen];
+    }else if(deviceOrientation == UIDeviceOrientationLandscapeRight){
+        NSLog(@"右边");
+        [self toFullScreenWithisLeft:YES];
+    }else{
+        NSLog(@"其他");
+    }
+}
+
+//进入全屏模式
+-(void)toFullScreenWithisLeft:(BOOL)isLeft{
+    NYVideoFullScreenVC *vc = [[NYVideoFullScreenVC alloc] initWithPlayerView:self isLeft:isLeft];
+    [self.detailVC presentViewController:vc animated:YES completion:nil];
+    self.fullScreenVC = vc;
+}
+//退出全屏模式
+-(void)quitFullScreen{
+    if (self.fullScreenVC) {
+        [self.fullScreenVC dismissViewControllerAnimated:YES completion:nil];
+    }
+}
 @end
