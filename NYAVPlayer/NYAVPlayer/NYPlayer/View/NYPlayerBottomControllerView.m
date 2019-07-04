@@ -7,7 +7,7 @@
 //
 
 #import "NYPlayerBottomControllerView.h"
-@interface NYPlayerBottomControllerView()<NYSliderViewDelegate>
+@interface NYPlayerBottomControllerView()
 /// 播放还是暂停按钮
 @property(nonatomic, weak)UIButton *playOrPauseBtn;
 /** 清晰度按钮*/
@@ -16,12 +16,14 @@
 @property(nonatomic, weak)UIButton *rateBtn;
 /** 全屏按钮*/
 @property(nonatomic, weak)UIButton *fullScreenBtn;
-/** 时间进度label 1:03/3:33*/
-@property(nonatomic, weak)UILabel *timeProgressLabel;
+/// 播放的当前时间
+@property (nonatomic, weak) UILabel *currentTimeLabel;
+/// 视频总时间
+@property (nonatomic, weak) UILabel *totalTimeLabel;
 /// 滑杆
 @property (nonatomic, weak) NYSliderView *slider;
 /// 底部播放进度
-@property (nonatomic, weak) NYSliderView *bottomPgrogress;
+@property (nonatomic, weak) NYSliderView *bottomProgres;
 
 @end
 @implementation NYPlayerBottomControllerView
@@ -43,8 +45,9 @@
     [self playOrPauseBtn];
     [self fullScreenBtn];
     [self slider];
-    [self bottomPgrogress];
-    [self timeProgressLabel];
+    [self bottomProgres];
+    [self currentTimeLabel];
+    [self totalTimeLabel];
     [self definitionBtn];
 }
 #pragma mark - property
@@ -52,50 +55,59 @@
     CGFloat maxW = frame.size.width;
     CGFloat maxH = frame.size.height;
     
-    CGFloat playOrPauseBtnW = 40;
+    CGFloat playOrPauseBtnW = 24;
     CGFloat playOrPauseBtnH = playOrPauseBtnW;
-    self.playOrPauseBtn.frame = CGRectMake(0, 0, playOrPauseBtnW, playOrPauseBtnH);
+    self.playOrPauseBtn.frame = CGRectMake(8, 40, playOrPauseBtnW, playOrPauseBtnH);
 
+    [self.currentTimeLabel sizeToFit];
+    self.currentTimeLabel.frame = CGRectMake(self.playOrPauseBtn.ny_max_x + 6, self.playOrPauseBtn.ny_y, self.currentTimeLabel.ny_width, self.currentTimeLabel.ny_height);
+    self.currentTimeLabel.ny_centerY = self.playOrPauseBtn.ny_centerY;
+    
     //全屏按钮
-    CGFloat fullScreenBtnW = 40;
+    CGFloat fullScreenBtnW = 24;
     CGFloat fullScreenBtnH = fullScreenBtnW;
-    CGFloat fullScreenBtnX = maxW - fullScreenBtnW - 20;
-    CGFloat fullScreenBtnY = 0;
+    CGFloat fullScreenBtnX = maxW - fullScreenBtnW - 8;
+    CGFloat fullScreenBtnY = self.playOrPauseBtn.ny_y;
     self.fullScreenBtn.frame = CGRectMake(fullScreenBtnX, fullScreenBtnY, fullScreenBtnW, fullScreenBtnH);
-
+    self.fullScreenBtn.ny_centerY = self.playOrPauseBtn.ny_centerY;
+    
     //倍速按钮
-    CGFloat rateBtnW = 40;
-    CGFloat rateBtnH = rateBtnW;
-    CGFloat rateBtnX = maxW - rateBtnW - 20;
-    CGFloat rateBtnY = 0;
+    [self.rateBtn sizeToFit];
+    CGFloat rateBtnW = self.rateBtn.ny_width;
+    CGFloat rateBtnH = self.rateBtn.ny_height;
+    CGFloat rateBtnX = self.fullScreenBtn.ny_x - rateBtnW - 14;
+    CGFloat rateBtnY = self.playOrPauseBtn.ny_y;
     self.rateBtn.frame = CGRectMake(rateBtnX, rateBtnY, rateBtnW, rateBtnH);
+    self.rateBtn.ny_centerY = self.playOrPauseBtn.ny_centerY;
     
     //高清按钮
-    CGFloat definitionBtnW = 40;
-    CGFloat definitionBtnH = definitionBtnW;
-    CGFloat definitionBtnX = self.rateBtn.ny_x - definitionBtnW - 20;
-    CGFloat definitionBtnY = 0;
-    self.definitionBtn.frame = CGRectMake(definitionBtnX, definitionBtnY, definitionBtnW, definitionBtnH);
-
-    CGFloat timeProgressLabelW = 100;
-    CGFloat timeProgressLabelH = 40;
-    UIView *btn = self.fullScreenBtn;
-    if (self.fullScreenBtn.hidden == NO) {
-        btn = self.fullScreenBtn;
-    }else{
-        btn = self.definitionBtn;
+    [self.definitionBtn sizeToFit];
+    CGFloat definitionBtnW = self.definitionBtn.ny_width;
+    CGFloat definitionBtnH = self.definitionBtn.ny_height;
+    CGFloat definitionBtnX = self.rateBtn.ny_x - definitionBtnW - 14;
+    CGFloat definitionBtnY = self.playOrPauseBtn.ny_y;
+    if (self.rateBtn.hidden) {
+        definitionBtnX = self.fullScreenBtn.ny_x - rateBtnW - 14;
     }
-    CGFloat timeProgressLabelX = btn.ny_x - timeProgressLabelW - 20;
-    CGFloat timeProgressLabelY = 0;
-    self.timeProgressLabel.frame = CGRectMake(timeProgressLabelX, timeProgressLabelY, timeProgressLabelW, timeProgressLabelH);
+    self.definitionBtn.frame = CGRectMake(definitionBtnX, definitionBtnY, definitionBtnW, definitionBtnH);
+    self.definitionBtn.ny_centerY = self.playOrPauseBtn.ny_centerY;
     
-    CGFloat sliderX = self.playOrPauseBtn.ny_max_x + 10;
+    [self.totalTimeLabel sizeToFit];
+    CGFloat totalTimeLabelW = self.totalTimeLabel.ny_width;
+    CGFloat totalTimeLabelH = self.totalTimeLabel.ny_height;
+    CGFloat totalTimeLabelX = self.definitionBtn.ny_x - totalTimeLabelW - 14;
+    self.totalTimeLabel.frame = CGRectMake(totalTimeLabelX, 0, totalTimeLabelW, totalTimeLabelH);
+    self.totalTimeLabel.ny_centerY = self.playOrPauseBtn.ny_centerY;
+    
+    CGFloat sliderX = self.currentTimeLabel.ny_max_x + 8;
     CGFloat sliderY = 0;
-    CGFloat sliderW = self.timeProgressLabel.ny_x - 30 - sliderX;
+    CGFloat sliderW = self.totalTimeLabel.ny_x - 8 - sliderX;
     CGFloat sliderH = self.playOrPauseBtn.ny_height;
     self.slider.frame = CGRectMake(sliderX, sliderY, sliderW, sliderH);
+    self.slider.ny_centerY = self.playOrPauseBtn.ny_centerY;
     
-    self.bottomPgrogress.frame = CGRectMake(0, maxH - 2, maxW, 2);
+    CGFloat bottomProgressH = 1;
+    self.bottomProgres.frame = CGRectMake(0, maxH - bottomProgressH, maxW, bottomProgressH);
     [super setFrame:frame];
 }
 -(UIButton *)playOrPauseBtn{
@@ -103,8 +115,8 @@
         UIButton *btn = [[UIButton alloc] init];
         [self addSubview:btn];
         _playOrPauseBtn = btn;
-        [_playOrPauseBtn setImage:NYPlayer_Image(@"new_allPlay_44x44_") forState:UIControlStateNormal];
-        [_playOrPauseBtn setImage:NYPlayer_Image(@"new_allPause_44x44_") forState:UIControlStateSelected];
+        [_playOrPauseBtn setImage:NYPlayer_Image(@"icVideoPlay") forState:UIControlStateNormal];
+        [_playOrPauseBtn setImage:NYPlayer_Image(@"icVideoPause") forState:UIControlStateSelected];
         [btn addTarget:self action:@selector(playBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         
     }
@@ -115,6 +127,7 @@
         UIButton *btn = [[UIButton alloc] init];
         [self addSubview:btn];
         _definitionBtn = btn;
+        btn.titleLabel.font = [UIFont systemFontOfSize:12.0f];
         [btn setTitle:@"高清" forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(definitionBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         _definitionBtn = btn;
@@ -125,29 +138,42 @@
     if (!_fullScreenBtn) {
         UIButton *btn = [[UIButton alloc] init];
         [self addSubview:btn];
-        [btn setTitle:@"全屏" forState:UIControlStateNormal];
-        [btn addTarget:self action:@selector(fullScreenBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         _fullScreenBtn = btn;
+        [btn setImage:NYPlayer_Image(@"icPreviewFull") forState:UIControlStateNormal];
+        [btn addTarget:self action:@selector(fullScreenBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _fullScreenBtn;
 }
 
-- (UILabel *)timeProgressLabel {
-    if (!_timeProgressLabel) {
-        UILabel *progressLabel = [[UILabel alloc] init];
-        [self addSubview:progressLabel];
-        _timeProgressLabel = progressLabel;
-        progressLabel.textColor = [UIColor whiteColor];
-        progressLabel.font = [UIFont systemFontOfSize:14.0f];
-        progressLabel.textAlignment = NSTextAlignmentCenter;
+- (UILabel *)currentTimeLabel {
+    if (!_currentTimeLabel) {
+        UILabel *label = [[UILabel alloc] init];
+        [self addSubview:label];
+        _currentTimeLabel = label;
+        label.textColor = [UIColor whiteColor];
+        label.font = [UIFont systemFontOfSize:12.0f];
+        label.textAlignment = NSTextAlignmentCenter;
     }
-    return _timeProgressLabel;
+    return _currentTimeLabel;
+    
+}
+- (UILabel *)totalTimeLabel {
+    if (!_totalTimeLabel) {
+        UILabel *label = [[UILabel alloc] init];
+        [self addSubview:label];
+        _totalTimeLabel = label;
+        label.textColor = [UIColor whiteColor];
+        label.font = [UIFont systemFontOfSize:12.0f];
+        label.textAlignment = NSTextAlignmentCenter;
+    }
+    return _totalTimeLabel;
     
 }
 - (UIButton *)rateBtn{
     if (!_rateBtn) {
         UIButton *btn = [[UIButton alloc] init];
         [self addSubview:btn];
+        btn.titleLabel.font = [UIFont systemFontOfSize:12.0f];
         [btn setTitle:@"倍速" forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(rateBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         _rateBtn = btn;
@@ -160,8 +186,8 @@
         NYSliderView *slider = [[NYSliderView alloc] initWithFrame:CGRectZero];
         [self addSubview:slider];
         _slider = slider;
-        slider.delegate = self;
-        _slider.sliderBtn.backgroundColor = [UIColor redColor];
+        _slider.sliderBtn.backgroundColor = [UIColor whiteColor];
+        _slider.sliderBtn.layer.cornerRadius = 6;
         _slider.maximumTrackTintColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.8];
         _slider.bufferTrackTintColor  = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
         _slider.minimumTrackTintColor = [UIColor whiteColor];
@@ -170,18 +196,18 @@
     }
     return _slider;
 }
-- (NYSliderView *)bottomPgrogress {
-    if (!_bottomPgrogress) {
-        NYSliderView *bottomPgrogress = [[NYSliderView alloc] init];
-        [self addSubview:bottomPgrogress];
-        _bottomPgrogress = bottomPgrogress;
-        _bottomPgrogress.maximumTrackTintColor = [UIColor clearColor];
-        _bottomPgrogress.minimumTrackTintColor = [UIColor purpleColor];
-        _bottomPgrogress.bufferTrackTintColor  = [UIColor redColor];//[UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
-        _bottomPgrogress.sliderHeight = 2;
-        _bottomPgrogress.isHideSliderBlock = NO;
+- (NYSliderView *)bottomProgres {
+    if (!_bottomProgres) {
+        NYSliderView *bottomProgres = [[NYSliderView alloc] init];
+        [self addSubview:bottomProgres];
+        _bottomProgres = bottomProgres;
+        _bottomProgres.maximumTrackTintColor = [UIColor clearColor];
+        _bottomProgres.minimumTrackTintColor = [UIColor purpleColor];
+        _bottomProgres.bufferTrackTintColor  = [UIColor redColor];//[UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
+        _bottomProgres.sliderHeight = 2;
+        _bottomProgres.isHideSliderBlock = NO;
     }
-    return _bottomPgrogress;
+    return _bottomProgres;
 }
 
 #pragma mark - click
@@ -208,56 +234,11 @@
 /// 调节播放进度slider和当前时间更新
 - (void)sliderValueChanged:(CGFloat)value currentTimeString:(NSString *)timeString {
     self.slider.value = value;
-    self.timeProgressLabel.text = timeString;
+    self.currentTimeLabel.text = timeString;
     self.slider.isdragging = YES;
     [UIView animateWithDuration:0.3 animations:^{
         self.slider.sliderBtn.transform = CGAffineTransformMakeScale(1.2, 1.2);
     }];
 }
-#pragma mark - NYSliderViewDelegate
-// 滑块滑动开始
-- (void)sliderTouchBegan:(float)value{
-    self.slider.isdragging = YES;
-}
-// 滑块滑动中
-- (void)sliderValueChanged:(float)value{
-    if (self.currentManager.totalTime == 0) {
-        self.slider.value = 0;
-        return;
-    }
-    self.slider.isdragging = YES;
-    NSString *currentTimeString = [NYUtilities convertTimeSecond:self.currentManager.totalTime*value];
-    self.timeProgressLabel.text = currentTimeString;
-}
-// 滑块滑动结束
-- (void)sliderTouchEnded:(float)value{
-    if (self.currentManager.totalTime > 0) {
-        @weakify(self)
-        [self.currentManager seekToTime:self.currentManager.totalTime*value completionHandler:^(BOOL finished) {
-            @strongify(self)
-            if (finished) {
-                self.slider.isdragging = NO;
-            }
-        }];
-    } else {
-        self.slider.isdragging = NO;
-    }
-}
-// 滑杆点击
-- (void)sliderTapped:(float)value{
-    if (self.currentManager.totalTime > 0) {
-        self.slider.isdragging = YES;
-        @weakify(self)
-        [self.currentManager seekToTime:self.currentManager.totalTime*value completionHandler:^(BOOL finished) {
-            @strongify(self)
-            if (finished) {
-                self.slider.isdragging = NO;
-                [self.currentManager play];
-            }
-        }];
-    } else {
-        self.slider.isdragging = NO;
-        self.slider.value = 0;
-    }
-}
+
 @end

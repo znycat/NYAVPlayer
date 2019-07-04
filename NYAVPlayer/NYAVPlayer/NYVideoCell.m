@@ -29,13 +29,12 @@
 }
 - (IBAction)goDetail:(id)sender {
     
-    [NYSharePlayer playWithURLStr:self.urlStr superView:self.videoImageV isAutoPlay:YES playerViewStyle:NYPlayererViewStyleNone];
-    NYVideoDetailVC *vc = [[NYVideoDetailVC alloc] initWithURLString:self.urlStr];
-    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:vc animated:YES completion:nil];
+//    [NYSharePlayer playWithURLStr:self.urlStr superView:self.videoImageV isAutoPlay:YES playerViewStyle:NYPlayererViewStyleNone];
+
 }
 - (IBAction)play:(id)sender {
     self.videoImageV.userInteractionEnabled = YES;
-    [NYSharePlayer playWithURLStr:self.urlStr superView:self.videoImageV isAutoPlay:NO playerViewStyle:NYPlayererViewStyleNone];
+    [NYSharePlayer playWithURLStr:self.urlStr superView:self.videoImageV isAutoPlay:YES playerViewStyle:NYPlayererViewStyleNone];
 }
 -(void)setUrlStr:(NSString *)urlStr{
     _urlStr = urlStr;

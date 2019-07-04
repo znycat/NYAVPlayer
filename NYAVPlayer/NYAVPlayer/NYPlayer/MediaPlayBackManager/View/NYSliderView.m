@@ -9,7 +9,7 @@
 #import "NYSliderView.h"
 #import "UIView+NYFrame.h"
 /** 滑块的大小 */
-static const CGFloat kSliderBtnWH = 19.0;
+static const CGFloat kSliderBtnWH = 12.0;
 /** 间距 */
 //static const CGFloat kProgressMargin = 2.0;
 /** 进度的高度 */
@@ -85,6 +85,7 @@ static const CGFloat kAnimate = 0.3;
     min_h = self.thumbSize.height;
     self.sliderBtn.frame = CGRectMake(min_x, min_y, min_w, min_h);
     self.sliderBtn.ny_centerX = self.bgProgressView.ny_width * self.value;
+    self.sliderBtn.layer.cornerRadius = 6;
     
     min_x = 0;
     min_y = 0;

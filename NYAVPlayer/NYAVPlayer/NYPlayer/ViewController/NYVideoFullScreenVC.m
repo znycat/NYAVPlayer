@@ -49,7 +49,6 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    NYSharePlayer.playerViewStyle = NYPlayererViewStyleFullScreen;
 }
 
 -(void)viewWillDisappear:(BOOL)animated{

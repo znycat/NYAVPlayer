@@ -10,7 +10,6 @@
 		E903DEED22CB3EC200A08B36 /* NYSpeedLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = E903DEEC22CB3EC200A08B36 /* NYSpeedLoadingView.m */; };
 		E903DEF022CB3F9A00A08B36 /* NYLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = E903DEEF22CB3F9A00A08B36 /* NYLoadingView.m */; };
 		E903DEF322CB405700A08B36 /* NYNetworkSpeedMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = E903DEF222CB405700A08B36 /* NYNetworkSpeedMonitor.m */; };
-		E903DEF522CB495500A08B36 /* ZFPlayer.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E903DEF422CB495500A08B36 /* ZFPlayer.bundle */; };
 		E90514A922CDA7290095A9E6 /* data.json in Resources */ = {isa = PBXBuildFile; fileRef = E90514A822CDA7290095A9E6 /* data.json */; };
 		E93AE92E22C61D4200A33805 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE92D22C61D4200A33805 /* AppDelegate.m */; };
 		E93AE93122C61D4200A33805 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE93022C61D4200A33805 /* ViewController.m */; };
@@ -27,6 +26,7 @@
 		E9935E7222CCA524005AFBE3 /* NYVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E9935E7022CCA524005AFBE3 /* NYVideoCell.m */; };
 		E9935E7322CCA524005AFBE3 /* NYVideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9935E7122CCA524005AFBE3 /* NYVideoCell.xib */; };
 		E9935E7622CCAE55005AFBE3 /* NYVideoDetailTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = E9935E7522CCAE55005AFBE3 /* NYVideoDetailTransition.m */; };
+		E998A80522CE11EA0030D2B2 /* NYPlayerGestureControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E998A80422CE11E90030D2B2 /* NYPlayerGestureControl.m */; };
 		E9BF999322C9BA7A00E84950 /* NYAVPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999222C9BA7A00E84950 /* NYAVPlayerManager.m */; };
 		E9BF999622C9BC9F00E84950 /* NYPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999522C9BC9F00E84950 /* NYPlayerView.m */; };
 		E9BF999922C9BECD00E84950 /* NYKVOController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999822C9BECD00E84950 /* NYKVOController.m */; };
@@ -34,6 +34,7 @@
 		E9BF99A022C9C3A100E84950 /* NYPlayerControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF999F22C9C3A100E84950 /* NYPlayerControllerView.m */; };
 		E9BF99B222C9ED0C00E84950 /* NYSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF99B122C9ED0C00E84950 /* NYSliderView.m */; };
 		E9BF99B522C9EE0900E84950 /* UIView+NYFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BF99B422C9EE0900E84950 /* UIView+NYFrame.m */; };
+		E9C54D3622CDF4B600BD02ED /* NYAVPlayer.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E9C54D3522CDF4B600BD02ED /* NYAVPlayer.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,7 +44,6 @@
 		E903DEEF22CB3F9A00A08B36 /* NYLoadingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYLoadingView.m; sourceTree = "<group>"; };
 		E903DEF122CB405700A08B36 /* NYNetworkSpeedMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYNetworkSpeedMonitor.h; sourceTree = "<group>"; };
 		E903DEF222CB405700A08B36 /* NYNetworkSpeedMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYNetworkSpeedMonitor.m; sourceTree = "<group>"; };
-		E903DEF422CB495500A08B36 /* ZFPlayer.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZFPlayer.bundle; sourceTree = "<group>"; };
 		E90514A822CDA7290095A9E6 /* data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = data.json; sourceTree = "<group>"; };
 		E93AE92922C61D4200A33805 /* NYAVPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYAVPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E93AE92C22C61D4200A33805 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -72,6 +72,8 @@
 		E9935E7122CCA524005AFBE3 /* NYVideoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NYVideoCell.xib; sourceTree = "<group>"; };
 		E9935E7422CCAE55005AFBE3 /* NYVideoDetailTransition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYVideoDetailTransition.h; sourceTree = "<group>"; };
 		E9935E7522CCAE55005AFBE3 /* NYVideoDetailTransition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYVideoDetailTransition.m; sourceTree = "<group>"; };
+		E998A80322CE11E90030D2B2 /* NYPlayerGestureControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NYPlayerGestureControl.h; sourceTree = "<group>"; };
+		E998A80422CE11E90030D2B2 /* NYPlayerGestureControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NYPlayerGestureControl.m; sourceTree = "<group>"; };
 		E9BF999122C9BA7A00E84950 /* NYAVPlayerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYAVPlayerManager.h; sourceTree = "<group>"; };
 		E9BF999222C9BA7A00E84950 /* NYAVPlayerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYAVPlayerManager.m; sourceTree = "<group>"; };
 		E9BF999422C9BC9F00E84950 /* NYPlayerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYPlayerView.h; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 		E9BF99B122C9ED0C00E84950 /* NYSliderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYSliderView.m; sourceTree = "<group>"; };
 		E9BF99B322C9EE0900E84950 /* UIView+NYFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+NYFrame.h"; sourceTree = "<group>"; };
 		E9BF99B422C9EE0900E84950 /* UIView+NYFrame.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+NYFrame.m"; sourceTree = "<group>"; };
+		E9C54D3522CDF4B600BD02ED /* NYAVPlayer.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = NYAVPlayer.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +142,7 @@
 				E93AE94222C61E5800A33805 /* NYPlayer */,
 				E93AE92F22C61D4200A33805 /* ViewController.h */,
 				E93AE93022C61D4200A33805 /* ViewController.m */,
+				E9C54D3522CDF4B600BD02ED /* NYAVPlayer.bundle */,
 				E9935E6F22CCA524005AFBE3 /* NYVideoCell.h */,
 				E9935E7022CCA524005AFBE3 /* NYVideoCell.m */,
 				E9935E7122CCA524005AFBE3 /* NYVideoCell.xib */,
@@ -167,7 +171,8 @@
 		E93AE94322C61E5800A33805 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				E903DEF422CB495500A08B36 /* ZFPlayer.bundle */,
+				E998A80322CE11E90030D2B2 /* NYPlayerGestureControl.h */,
+				E998A80422CE11E90030D2B2 /* NYPlayerGestureControl.m */,
 				E9BF99B322C9EE0900E84950 /* UIView+NYFrame.h */,
 				E9BF99B422C9EE0900E84950 /* UIView+NYFrame.m */,
 			);
@@ -299,11 +304,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E903DEF522CB495500A08B36 /* ZFPlayer.bundle in Resources */,
 				E90514A922CDA7290095A9E6 /* data.json in Resources */,
 				E93AE93922C61D4200A33805 /* LaunchScreen.storyboard in Resources */,
 				E93AE93622C61D4200A33805 /* Assets.xcassets in Resources */,
 				E9935E7322CCA524005AFBE3 /* NYVideoCell.xib in Resources */,
+				E9C54D3622CDF4B600BD02ED /* NYAVPlayer.bundle in Resources */,
 				E93AE93422C61D4200A33805 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -334,6 +339,7 @@
 				E9935E6E22CC8FC1005AFBE3 /* NYSmallView.m in Sources */,
 				E93AE92E22C61D4200A33805 /* AppDelegate.m in Sources */,
 				E93AE95622C61E5800A33805 /* NYVideoDetailVC.m in Sources */,
+				E998A80522CE11EA0030D2B2 /* NYPlayerGestureControl.m in Sources */,
 				E9935E6B22CC456A005AFBE3 /* NYFullTransition.m in Sources */,
 				E9BF999922C9BECD00E84950 /* NYKVOController.m in Sources */,
 			);

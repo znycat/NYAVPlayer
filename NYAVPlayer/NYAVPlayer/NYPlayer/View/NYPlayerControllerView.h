@@ -44,11 +44,17 @@ typedef NS_ENUM(NSUInteger, NYPlayererViewStyle) {
 @property(nonatomic,weak)NYVideoDetailVC *detailVC;
 @property(nonatomic,weak)NYVideoFullScreenVC *fullScreenVC;
 
-@property(nonatomic,assign)NYPlayererViewStyle playerViewStyle;
+@property(nonatomic,assign,readonly)NYPlayererViewStyle playerViewStyle;
 
 @property (nonatomic, strong, readonly) id <NYPlayerMediaPlayback> currentManager;
 
 + (instancetype)sharePlayer;
+
+/// 控制层自动隐藏的时间，默认2.5秒
+@property (nonatomic, assign) NSTimeInterval autoHiddenTimeInterval;
+
+/// 控制层显示、隐藏动画的时长，默认0.25秒
+@property (nonatomic, assign) NSTimeInterval autoFadeTimeInterval;
 
 -(void)playWithURLStr:(NSString *)urlStr superView:(UIView *)superView isAutoPlay:(BOOL)isAutoPlay playerViewStyle:(NYPlayererViewStyle)playerViewStyle;
 -(void)playWithURLStr:(NSString *)urlStr superView:(UIView *)superView isAutoPlay:(BOOL)isAutoPlay playerViewStyle:(NYPlayererViewStyle)playerViewStyle nearestVC:(nullable UIViewController *)nearestVC;

@@ -36,10 +36,10 @@
     CGFloat maxW = frame.size.width;
 //    CGFloat maxH = frame.size.height;
 
-    CGFloat btnW = 40;
+    CGFloat btnW = 24;
     CGFloat btnH = btnW;
-    self.backBtn.frame = CGRectMake(16, 0, btnW, btnH);
-    self.smallBtn.frame = CGRectMake(maxW - btnW - 16, 0, btnW, btnH);
+    self.backBtn.frame = CGRectMake(16, 24, btnW, btnH);
+    self.smallBtn.frame = CGRectMake(maxW - btnW - 16, self.backBtn.ny_y, btnW, btnH);
     self.downloadBtn.frame = self.smallBtn.frame;
     [super setFrame:frame];
 }

@@ -68,8 +68,6 @@
 }
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    NYSharePlayer.playerViewStyle = NYPlayererViewStyleDetail;
-    NYSharePlayer.detailVC = self;
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -144,23 +142,6 @@
         [NYSharePlayer playWithURLStr:((NYDetailCell *)cell).urlString superView:cell.contentView isAutoPlay:YES playerViewStyle:NYPlayererViewStyleDetail nearestVC:self];
         self.playViewToCollectionView = YES;
     }
-//    NYLog(@"willDisplayCell %@",indexPath);
-//    NYPlayerControllerView *playerView = [cell viewWithTag:NYPlayerControllerViewTag];
-//    if (playerView == nil) {
-//        if (indexPath.section == 0
-//            && self.playerView) {
-//            playerView = self.playerView;
-//        }else{
-//            playerView = [[NYPlayerControllerView alloc] init];
-//        }
-//
-//        playerView.detailVC = self;
-//        playerView.playerViewStyle = NYPlayererViewStyleDetail;
-//        [cell.contentView addSubview:playerView];
-//        playerView.frame = cell.contentView.bounds;
-//        self.currentCellPlayerView = playerView;
-//    }
-    
 }
 
 //cell结束显示
