@@ -11,6 +11,9 @@
 #import "NYSpeedLoadingView.h"
 #import "NYSmallView.h"
 
+/** NYPlayerControllerView 的tag*/
+NSInteger const NYPlayerControllerViewTag = 2019741006666;
+
 static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallViewCenterStringKey";
 @interface NYPlayerControllerView()
 /// 顶部View
@@ -28,6 +31,8 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
 
 /// 小窗容器View
 @property (nonatomic, weak)NYSmallView *smallView;
+
+@property(nonatomic,copy)NSString *urlStr;
 @end
 @implementation NYPlayerControllerView
 #pragma mark - cycle
@@ -39,11 +44,35 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
 {
     self = [super init];
     if (self) {
-        [self setupUI];
-        [self setupClick];
-        self.playerViewStyle = NYPlayererViewStyleNone;
+        
     }
     return self;
+}
+
+static NYPlayerControllerView *_shareInstance;
++ (instancetype)sharePlayer {
+    if (!_shareInstance) {
+        _shareInstance = [[NYPlayerControllerView alloc] init];
+        [self install];
+    }
+    return _shareInstance;
+}
+
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+    
+    if (!_shareInstance) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            _shareInstance = [super allocWithZone:zone];
+        });
+    }
+    return _shareInstance;
+}
++(void)install{
+    _shareInstance.tag = NYPlayerControllerViewTag;
+    [_shareInstance setupUI];
+    [_shareInstance setupClick];
+    _shareInstance.playerViewStyle = NYPlayererViewStyleNone;
 }
 
 -(void)setFrame:(CGRect)frame{
@@ -158,22 +187,26 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
     }
     return _playOrPauseBtn;
 }
+-(id<NYPlayerMediaPlayback>)currentManager{
+    if (!_currentManager) {
+        NYAVPlayerManager *currentManager = [[NYAVPlayerManager alloc] init];
+        _currentManager = currentManager;
+        _currentManager.shouldAutoPlay = NO;
+    }
+    return _currentManager;
+}
 
--(void)setUrlStr:(NSString *)urlStr{
-    _urlStr = urlStr;
-    self.currentManager = [[NYAVPlayerManager alloc] init];
-    self.currentManager.shouldAutoPlay = NO;
-    self.currentManager.assetURL = [NSURL URLWithString:urlStr];
+// 设置播放控制器的各种回掉
+-(void)setupCurrentManager{
     //    self.currentManager.muted = NO;
     //    self.currentManager.volume = 1;
     [self insertSubview:self.currentManager.view atIndex:0];
     self.currentManager.view.frame = self.bounds;
     self.bottomControllerView.currentManager = self.currentManager;
-    
     @weakify(self)
     //播放结束回调
     [self.currentManager setPlayerDidToEnd:^(id<NYPlayerMediaPlayback>  _Nonnull asset) {
-//        @strongify(self)
+        //        @strongify(self)
         NYLog(@"--- end");
     }];
     //加载状态改变
@@ -248,16 +281,17 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
     
     // 准备好了将要播放
     [self.currentManager setPlayerReadyToPlay:^(id<NYPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
-
+        
     }];
-    
-    [self addNotification];
-    
-    
 }
 
 -(void)addNotification{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+/// 清空所有状态
+-(void)cleanAllState{
+    [self removeNotification];
+    
 }
 -(void)removeNotification{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -285,16 +319,16 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
 -(void)deviceOrientationDidChange:(NSNotification *)notification{
     UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
     if (deviceOrientation == UIDeviceOrientationLandscapeLeft) {
-        NSLog(@"左边");
+        NYLog(@"左边");
         [self goFullScreenWithisLeft:NO animated:YES];
     }else if(deviceOrientation == UIDeviceOrientationPortrait){
-        NSLog(@"竖着");
+        NYLog(@"竖着");
         [self quitFullScreenAnimated:YES];
     }else if(deviceOrientation == UIDeviceOrientationLandscapeRight){
-        NSLog(@"右边");
+        NYLog(@"右边");
         [self goFullScreenWithisLeft:YES animated:YES];
     }else{
-        NSLog(@"其他");
+        NYLog(@"其他");
     }
 }
 
@@ -303,7 +337,7 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
     if (animated) {
         self.playerViewStyle = NYPlayererViewStyleAnimating;
     }
-    NYVideoFullScreenVC *vc = [[NYVideoFullScreenVC alloc] initWithPlayerView:self isLeft:isLeft];
+    NYVideoFullScreenVC *vc = [[NYVideoFullScreenVC alloc] initWithIsLeft:isLeft];
     [self.detailVC presentViewController:vc animated:animated completion:nil];
     self.fullScreenVC = vc;
 }
@@ -393,9 +427,32 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
     }
 }
 
-/// 停止播放 移除
--(void)stop{
-    [self.currentManager stop];
-    [self removeFromSuperview];
+-(void)playWithURLStr:(NSString *)urlStr superView:(UIView *)superView isAutoPlay:(BOOL)isAutoPlay playerViewStyle:(NYPlayererViewStyle)playerViewStyle{
+    [self playWithURLStr:urlStr superView:superView isAutoPlay:isAutoPlay playerViewStyle:playerViewStyle nearestVC:nil];
+}
+-(void)playWithURLStr:(NSString *)urlStr superView:(UIView *)superView isAutoPlay:(BOOL)isAutoPlay playerViewStyle:(NYPlayererViewStyle)playerViewStyle nearestVC:(nullable UIViewController *)nearestVC{
+    
+    if ([_urlStr isEqualToString:urlStr] && self.currentManager.assetURL) {
+        if ([nearestVC isKindOfClass:NYVideoDetailVC.class]) {
+            
+        }else{
+            return;
+        }
+        
+    }
+    if (urlStr == nil) {
+        return;
+    }
+    
+    [superView insertSubview:self atIndex:0];
+    self.frame = superView.bounds;
+    self.urlStr = urlStr;
+    self.currentManager.assetURL = [NSURL URLWithString:urlStr];
+    if (isAutoPlay) {
+        [self.currentManager play];
+    }
+    
+    [self setupCurrentManager];
+    [self addNotification];
 }
 @end

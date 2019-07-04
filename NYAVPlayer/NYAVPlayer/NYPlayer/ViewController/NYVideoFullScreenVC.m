@@ -10,18 +10,16 @@
 #import "NYPlayerControllerView.h"
 @interface NYVideoFullScreenVC ()
 @property(nonatomic, assign)BOOL isLeft;
-@property(nonatomic, weak)NYPlayerControllerView *playerView;
 @end
 
 @implementation NYVideoFullScreenVC
 
-- (instancetype)initWithPlayerView:(NYPlayerControllerView *)playerView isLeft:(BOOL)isLeft{
+- (instancetype)initWithIsLeft:(BOOL)isLeft{
     self = [super init];
     if (self) {
         self.isLeft = isLeft;
-        self.playerView = playerView;
         self.modalPresentationStyle = UIModalPresentationFullScreen;
-        self.transition = [[NYFullTransition alloc] initWithPlayerView:playerView isLeft:isLeft];
+        self.transition = [[NYFullTransition alloc] initWithIsLeft:isLeft];
         self.transitioningDelegate = self.transition;
     }
     return self;
@@ -51,7 +49,7 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    self.playerView.playerViewStyle = NYPlayererViewStyleFullScreen;
+    NYSharePlayer.playerViewStyle = NYPlayererViewStyleFullScreen;
 }
 
 -(void)viewWillDisappear:(BOOL)animated{

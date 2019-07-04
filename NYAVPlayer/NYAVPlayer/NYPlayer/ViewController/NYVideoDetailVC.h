@@ -11,8 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 @class NYPlayerControllerView;
 @interface NYVideoDetailVC : UIViewController
-- (instancetype)initWithPlayerView:(NYPlayerControllerView *)playerView;
-- (instancetype)init __attribute__((unavailable("请用- (instancetype)initWithPlayerView:(NYPlayerControllerView *)playerView 方法初始化")));
+- (instancetype)initWithURLString:(NSString *)urlStr;
+- (instancetype)init __attribute__((unavailable("请用- (instancetype)initWithURLString:(NSString *)urlStr 方法初始化")));
 @property (nonatomic ,strong) NYVideoDetailTransition *transition;
 @end
 

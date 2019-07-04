@@ -9,12 +9,14 @@
 #import "NYVideoCell.h"
 #import "NYPlayerControllerView.h"
 #import "NYVideoDetailVC.h"
-#import "NYPlayerManager.h"
 @interface NYVideoCell ()
 
 @end
 @implementation NYVideoCell
 
+-(void)dealloc{
+    NSLog(@"cell delloc");
+}
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
@@ -26,30 +28,20 @@
     // Configure the view for the selected state
 }
 - (IBAction)goDetail:(id)sender {
-    self.playerView.urlStr = self.urlStr;
-    [NYPlayerManager shareManager].currentPlayerView = self.playerView;
-    NYVideoDetailVC *vc = [[NYVideoDetailVC alloc] initWithPlayerView:self.playerView];
+    
+    [NYSharePlayer playWithURLStr:self.urlStr superView:self.videoImageV isAutoPlay:YES playerViewStyle:NYPlayererViewStyleNone];
+    NYVideoDetailVC *vc = [[NYVideoDetailVC alloc] initWithURLString:self.urlStr];
     [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:vc animated:YES completion:nil];
 }
 - (IBAction)play:(id)sender {
     self.videoImageV.userInteractionEnabled = YES;
-    self.playerView.urlStr = self.urlStr;
-    [NYPlayerManager shareManager].currentPlayerView = self.playerView;
-}
-
--(NYPlayerControllerView *)playerView{
-    if (!_playerView) {
-        NYPlayerControllerView *playerView = [[NYPlayerControllerView alloc] init];
-        [self.videoImageV addSubview:playerView];
-        _playerView = playerView;
-        playerView.frame = self.videoImageV.bounds;
-    }
-    return _playerView;
+    [NYSharePlayer playWithURLStr:self.urlStr superView:self.videoImageV isAutoPlay:NO playerViewStyle:NYPlayererViewStyleNone];
 }
 -(void)setUrlStr:(NSString *)urlStr{
-    if (![urlStr isEqualToString:urlStr]) {
-        [self.playerView removeFromSuperview];
-    }
     _urlStr = urlStr;
+    for (UIView *view in self.videoImageV.subviews) {
+        [view removeFromSuperview];
+    }
 }
+
 @end

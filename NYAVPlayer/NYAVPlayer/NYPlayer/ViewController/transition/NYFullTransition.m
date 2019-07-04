@@ -9,21 +9,19 @@
 #import "NYFullTransition.h"
 #import "NYPlayerControllerView.h"
 @interface NYFullTransition()
+
 @property(nonatomic, assign) BOOL isPresent;
 @property(nonatomic, assign)BOOL isLeft;
 
 @property(nonatomic, assign) CGPoint initialCenter;
 @property(nonatomic, assign) CGRect initialBounds;
 @property(nonatomic, weak)UIView *initialPlayerViewParentView;
-
-@property(nonatomic, weak)NYPlayerControllerView *playerView;
 @end
 @implementation NYFullTransition
-- (instancetype)initWithPlayerView:(NYPlayerControllerView *)playerView isLeft:(BOOL)isLeft;
+- (instancetype)initWithIsLeft:(BOOL)isLeft
 {
     self = [super init];
     if (self) {
-        self.playerView = playerView;
         self.isLeft = isLeft;
     }
     return self;
@@ -44,7 +42,7 @@
 #pragma mark - UIViewControllerAnimatedTransitioning
 // 动画转场时间
 -(NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext{
-    return 2;
+    return 0.5;
 }
 
 // 获取转场的上下文, 可以通过上下文获取d弹出的view和消失的view
@@ -65,19 +63,19 @@
     if (self.isPresent) {
         // 计算toView的初始中心位置
         
-        self.initialCenter = [transitionContext.containerView convertPoint:self.playerView.center toView:nil];
-        self.initialBounds = [transitionContext.containerView convertRect:self.playerView.bounds fromView:nil];
-        self.initialPlayerViewParentView = self.playerView.superview;
+        self.initialCenter = [transitionContext.containerView convertPoint:NYSharePlayer.center toView:nil];
+        self.initialBounds = [transitionContext.containerView convertRect:NYSharePlayer.bounds fromView:nil];
+        self.initialPlayerViewParentView = NYSharePlayer.superview;
         
         //屏幕变化 需要反转一下x y的值
         CGPoint initialCenter = CGPointMake(self.initialCenter.y, self.initialCenter.x);
         [transitionContext.containerView addSubview:toView];
         
         // 将toView的 位置变为初始位置，准备动画
-        [toView addSubview:self.playerView];
-        toView.bounds = self.playerView.bounds;
+        [toView addSubview:NYSharePlayer];
+        toView.bounds = NYSharePlayer.bounds;
         toView.center = initialCenter;
-        self.playerView.frame = toView.bounds;
+        NYSharePlayer.frame = toView.bounds;
         
         // 根据屏幕方向的不同选择不同的角度
         if (self.isLeft) {
@@ -85,46 +83,42 @@
         }else{
             toView.transform = CGAffineTransformMakeRotation(-M_PI_2);
         }
-
         [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 options:UIViewAnimationOptionLayoutSubviews animations:^{
-            
             // 将 toView 从设置的初始位置回复到正常位置
             toView.transform = CGAffineTransformIdentity;
             toView.bounds = transitionContext.containerView.bounds;
             toView.center = transitionContext.containerView.center;
-            self.playerView.frame = toView.bounds;
+            NYSharePlayer.frame = toView.bounds;
         } completion:^(BOOL finished) {
             // 动画完成后再次设置终点状态，防止动画被打断造成BUG
             toView.transform = CGAffineTransformIdentity;
             toView.bounds = transitionContext.containerView.bounds;
             toView.center = transitionContext.containerView.center;
-            self.playerView.frame = toView.bounds;
+            NYSharePlayer.frame = NYSharePlayer.superview.bounds;
             [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         }];
         
     }else{
         // 将 toView 插入fromView的下面，否则动画过程中不会显示toView
         [transitionContext.containerView insertSubview:toView belowSubview:fromView];
-        
         [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 options:UIViewAnimationOptionLayoutSubviews animations:^{
-            
             // 将 toView 从设置的初始位置回复到正常位置
             // 让 fromView 返回playView的初始值
             fromView.transform = CGAffineTransformIdentity;
             fromView.center = self.initialCenter;
             fromView.bounds = self.initialBounds;
-            self.playerView.frame = fromView.bounds;
+            NYSharePlayer.frame = fromView.bounds;
             
         } completion:^(BOOL finished) {
             // 动画完成后再次设置终点状态，防止动画被打断造成BUG
             fromView.transform = CGAffineTransformIdentity;
             fromView.center = self.initialCenter;
             fromView.bounds = self.initialBounds;
-            self.playerView.frame = fromView.bounds;
+            NYSharePlayer.frame = fromView.bounds;
             
             // 动画完成后，将playView添加到竖屏界面上
-            [self.initialPlayerViewParentView addSubview:self.playerView];
-            self.playerView.frame = self.initialBounds;
+            [self.initialPlayerViewParentView addSubview:NYSharePlayer];
+            NYSharePlayer.frame = self.initialBounds;
             [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         }];
     }

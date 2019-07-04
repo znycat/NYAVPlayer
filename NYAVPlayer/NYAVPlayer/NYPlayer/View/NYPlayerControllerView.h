@@ -18,7 +18,19 @@
 #define NYLog(...)
 #endif
 
+#define NYSharePlayer [NYPlayerControllerView sharePlayer]
 NS_ASSUME_NONNULL_BEGIN
+
+#pragma mark - 颜色
+/**随机色*/
+#define NYRandomColor NYColor(arc4random_uniform(255), arc4random_uniform(255), arc4random_uniform(255))
+/**颜色RGBA颜色*/
+#define NYColorA(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
+/**颜色RGB颜色*/
+#define NYColor(r, g, b) NYColorA((r), (g), (b), 255)
+
+/** NYPlayerControllerView 的tag*/
+extern NSInteger const NYPlayerControllerViewTag;
 
 typedef NS_ENUM(NSUInteger, NYPlayererViewStyle) {
     NYPlayererViewStyleNone,//此状态 无控制 只有站位图和播放状态显示
@@ -29,16 +41,17 @@ typedef NS_ENUM(NSUInteger, NYPlayererViewStyle) {
 };
 @interface NYPlayerControllerView : UIView
 @property(nonatomic,copy)void(^topDownloadBtnClickBlock)(NYPlayerControllerView *playerView,NYPlayerTopView *topView);
-
-@property(nonatomic,copy)NSString *urlStr;
-
 @property(nonatomic,weak)NYVideoDetailVC *detailVC;
 @property(nonatomic,weak)NYVideoFullScreenVC *fullScreenVC;
 
 @property(nonatomic,assign)NYPlayererViewStyle playerViewStyle;
 
-/// 停止播放 移除
--(void)stop;
+@property (nonatomic, strong, readonly) id <NYPlayerMediaPlayback> currentManager;
+
++ (instancetype)sharePlayer;
+
+-(void)playWithURLStr:(NSString *)urlStr superView:(UIView *)superView isAutoPlay:(BOOL)isAutoPlay playerViewStyle:(NYPlayererViewStyle)playerViewStyle;
+-(void)playWithURLStr:(NSString *)urlStr superView:(UIView *)superView isAutoPlay:(BOOL)isAutoPlay playerViewStyle:(NYPlayererViewStyle)playerViewStyle nearestVC:(nullable UIViewController *)nearestVC;
 @end
 
 NS_ASSUME_NONNULL_END

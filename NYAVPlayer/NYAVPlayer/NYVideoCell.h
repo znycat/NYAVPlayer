@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *label;
 @property (weak, nonatomic) IBOutlet UIImageView *videoImageV;
 @property (nonatomic, copy)NSString *urlStr;
-@property(nonatomic, weak)NYPlayerControllerView *playerView;
 @end
 
 NS_ASSUME_NONNULL_END
