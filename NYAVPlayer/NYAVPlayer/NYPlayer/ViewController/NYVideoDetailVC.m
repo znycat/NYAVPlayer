@@ -45,7 +45,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.view.backgroundColor = [UIColor yellowColor];
+    self.view.backgroundColor = [UIColor blackColor];
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"json"];
     NSData *data = [NSData dataWithContentsOfFile:path];
@@ -128,7 +128,7 @@
     for (NYDetailCell *cell in arr) {
         CGRect frame = [cell.contentView convertRect:cell.contentView.bounds toView:nil];
         if (frame.origin.y > -50 && frame.origin.y < frame.size.height - 50) {
-            [NYSharePlayer playWithURLStr:cell.urlString superView:cell.contentView isAutoPlay:YES playerViewStyle:NYPlayererViewStyleDetail];
+            [NYSharePlayer playWithURLStr:cell.urlString superView:cell.contentView isAutoPlay:YES];
             return;
         }
     }
@@ -139,7 +139,7 @@
 
 -(void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
     if (!self.playViewToCollectionView && indexPath.section == 0) {
-        [NYSharePlayer playWithURLStr:((NYDetailCell *)cell).urlString superView:cell.contentView isAutoPlay:YES playerViewStyle:NYPlayererViewStyleDetail nearestVC:self];
+        [NYSharePlayer playWithURLStr:((NYDetailCell *)cell).urlString superView:cell.contentView isAutoPlay:YES nearestVC:self];
         self.playViewToCollectionView = YES;
     }
 }

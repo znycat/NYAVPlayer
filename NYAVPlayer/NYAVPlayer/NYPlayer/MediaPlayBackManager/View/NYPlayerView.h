@@ -9,6 +9,25 @@
 #import <UIKit/UIKit.h>
 #import "UIView+NYFrame.h"
 #import "ZFReachabilityManager.h"
+
+#define iPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? ((NSInteger)(([[UIScreen mainScreen] currentMode].size.height/[[UIScreen mainScreen] currentMode].size.width)*100) == 216) : NO)
+
+#pragma mark - 自定义高效率的 NSLog
+#ifdef DEBUG
+#define NYLog(...) NSLog(@"%s 第%d行 \n %@\n\n",__func__,__LINE__,[NSString stringWithFormat:__VA_ARGS__])
+#else
+#define NYLog(...)
+#endif
+
+#define NYSharePlayer [NYPlayerControllerView sharePlayer]
+
+#pragma mark - 颜色
+/**随机色*/
+#define NYRandomColor NYColor(arc4random_uniform(255), arc4random_uniform(255), arc4random_uniform(255))
+/**颜色RGBA颜色*/
+#define NYColorA(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
+/**颜色RGB颜色*/
+#define NYColor(r, g, b) NYColorA((r), (g), (b), 255)
 /**
  Synthsize a weak or strong reference.
  
@@ -56,8 +75,6 @@
 #define NYPlayer_Image(file)                 [NYUtilities imageNamed:file]
 
 NS_ASSUME_NONNULL_BEGIN
-
-
 @interface NYPlayerView : UIView
 
 @end

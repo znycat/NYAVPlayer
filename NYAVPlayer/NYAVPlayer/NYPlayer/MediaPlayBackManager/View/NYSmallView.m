@@ -7,6 +7,7 @@
 //
 
 #import "NYSmallView.h"
+#import "NYPlayerView.h"
 @interface NYSmallView()
 @property(nonatomic, assign) UIEdgeInsets safeInsets;
 @property(nonatomic, weak)UIView *closeBtn;
@@ -33,7 +34,7 @@
     CGFloat maxW = frame.size.width;
     //CGFloat maxH = frame.size.height;
     
-    self.closeBtn.frame = CGRectMake(maxW - 50, 0, 50, 20);
+    self.closeBtn.frame = CGRectMake(maxW - 40, 0, 40, 25);
     [super setFrame:frame];
 }
 - (void)initilize {
@@ -46,7 +47,7 @@
     if (!_closeBtn) {
         UIButton *btn = [[UIButton alloc] initWithFrame:CGRectZero];
         [self addSubview:btn];
-        [btn setTitle:@"关闭" forState:UIControlStateNormal];
+        [btn setImage:NYPlayer_Image(@"ic_video_close") forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(closeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         _closeBtn = btn;
     }

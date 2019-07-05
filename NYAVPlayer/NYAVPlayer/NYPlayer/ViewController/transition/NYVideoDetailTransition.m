@@ -55,6 +55,11 @@
         self.initialCenter = [self.initialPlayerViewParentView convertPoint:NYSharePlayer.center toView:nil];
         self.initialBounds = [self.initialPlayerViewParentView convertRect:NYSharePlayer.bounds fromView:nil];
         
+        UIView *view = [[UIView alloc] init];
+        [transitionContext.containerView addSubview:view];
+        view.frame = view.superview.bounds;
+        view.backgroundColor = [UIColor blackColor];
+        view.alpha = 0;
         
         [transitionContext.containerView addSubview:toView];
         
@@ -65,10 +70,13 @@
         NYSharePlayer.frame = toView.bounds;
 
         [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 options:UIViewAnimationOptionLayoutSubviews animations:^{
+            view.alpha = 1;
             toView.bounds = transitionContext.containerView.bounds;
             toView.center = transitionContext.containerView.center;
             NYSharePlayer.frame = toView.bounds;
         } completion:^(BOOL finished) {
+            view.alpha = 1;
+            [view removeFromSuperview];
             toView.bounds = transitionContext.containerView.bounds;
             toView.center = transitionContext.containerView.center;
             NYSharePlayer.frame = toView.bounds;
@@ -76,16 +84,26 @@
         }];
         
     }else{
+        
+        UIView *view = [[UIView alloc] init];
+        [transitionContext.containerView addSubview:view];
+        view.frame = view.superview.bounds;
+        view.backgroundColor = [UIColor blackColor];
+        view.alpha = 1;
         // 将 toView 插入fromView的下面，否则动画过程中不会显示toView
         [transitionContext.containerView insertSubview:toView belowSubview:fromView];
+        [transitionContext.containerView insertSubview:view belowSubview:fromView];
+        
         [fromView addSubview:NYSharePlayer];
 
         [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 options:UIViewAnimationOptionLayoutSubviews animations:^{
-            
+            view.alpha = 0;
             fromView.center = self.initialCenter;
             fromView.bounds = self.initialBounds;
             NYSharePlayer.frame = fromView.bounds;
         } completion:^(BOOL finished) {
+            view.alpha = 0;
+            [view removeFromSuperview];
             // 动画完成后再次设置终点状态，防止动画被打断造成BUG
             fromView.center = self.initialCenter;
             fromView.bounds = self.initialBounds;

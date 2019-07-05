@@ -31,8 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, readonly) UILabel *totalTimeLabel;
 /// 滑杆
 @property (nonatomic, weak, readonly) NYSliderView *slider;
-/// 底部播放进度
-@property (nonatomic, weak, readonly) NYSliderView *bottomProgres;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -34,7 +34,7 @@
 }
 - (IBAction)play:(id)sender {
     self.videoImageV.userInteractionEnabled = YES;
-    [NYSharePlayer playWithURLStr:self.urlStr superView:self.videoImageV isAutoPlay:YES playerViewStyle:NYPlayererViewStyleNone];
+    [NYSharePlayer playWithURLStr:self.urlStr superView:self.videoImageV isAutoPlay:YES];
 }
 -(void)setUrlStr:(NSString *)urlStr{
     _urlStr = urlStr;

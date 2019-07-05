@@ -22,8 +22,6 @@
 @property (nonatomic, weak) UILabel *totalTimeLabel;
 /// 滑杆
 @property (nonatomic, weak) NYSliderView *slider;
-/// 底部播放进度
-@property (nonatomic, weak) NYSliderView *bottomProgres;
 
 @end
 @implementation NYPlayerBottomControllerView
@@ -45,7 +43,6 @@
     [self playOrPauseBtn];
     [self fullScreenBtn];
     [self slider];
-    [self bottomProgres];
     [self currentTimeLabel];
     [self totalTimeLabel];
     [self definitionBtn];
@@ -53,7 +50,7 @@
 #pragma mark - property
 -(void)setFrame:(CGRect)frame{
     CGFloat maxW = frame.size.width;
-    CGFloat maxH = frame.size.height;
+    //CGFloat maxH = frame.size.height;
     
     CGFloat playOrPauseBtnW = 24;
     CGFloat playOrPauseBtnH = playOrPauseBtnW;
@@ -105,9 +102,6 @@
     CGFloat sliderH = self.playOrPauseBtn.ny_height;
     self.slider.frame = CGRectMake(sliderX, sliderY, sliderW, sliderH);
     self.slider.ny_centerY = self.playOrPauseBtn.ny_centerY;
-    
-    CGFloat bottomProgressH = 1;
-    self.bottomProgres.frame = CGRectMake(0, maxH - bottomProgressH, maxW, bottomProgressH);
     [super setFrame:frame];
 }
 -(UIButton *)playOrPauseBtn{
@@ -139,7 +133,8 @@
         UIButton *btn = [[UIButton alloc] init];
         [self addSubview:btn];
         _fullScreenBtn = btn;
-        [btn setImage:NYPlayer_Image(@"icPreviewFull") forState:UIControlStateNormal];
+        [btn setImage:NYPlayer_Image(@"ic_video_full") forState:UIControlStateNormal];
+        [btn setImage:NYPlayer_Image(@"ic_video_full_off") forState:UIControlStateSelected];
         [btn addTarget:self action:@selector(fullScreenBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _fullScreenBtn;
@@ -196,19 +191,6 @@
     }
     return _slider;
 }
-- (NYSliderView *)bottomProgres {
-    if (!_bottomProgres) {
-        NYSliderView *bottomProgres = [[NYSliderView alloc] init];
-        [self addSubview:bottomProgres];
-        _bottomProgres = bottomProgres;
-        _bottomProgres.maximumTrackTintColor = [UIColor clearColor];
-        _bottomProgres.minimumTrackTintColor = [UIColor purpleColor];
-        _bottomProgres.bufferTrackTintColor  = [UIColor redColor];//[UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
-        _bottomProgres.sliderHeight = 2;
-        _bottomProgres.isHideSliderBlock = NO;
-    }
-    return _bottomProgres;
-}
 
 #pragma mark - click
 -(void)playBtnClick:(id)sender{
@@ -216,9 +198,6 @@
 }
 -(void)fullScreenBtnClick:(id)sender{
     if(self.fullScreenBtnBlock)self.fullScreenBtnBlock(self);
-    self.fullScreenBtn.hidden = YES;
-    self.rateBtn.hidden = NO;
-    self.definitionBtn.hidden = NO;
     [self setFrame:self.frame];
 }
 -(void)definitionBtnClick:(id)sender{
@@ -226,9 +205,6 @@
 }
 -(void)rateBtnClick:(id)sender{
     if(self.rateBtnClickBlock)self.rateBtnClickBlock(self);
-    self.fullScreenBtn.hidden = NO;
-    self.rateBtn.hidden = YES;
-    self.definitionBtn.hidden = YES;
     [self setFrame:self.frame];
 }
 /// 调节播放进度slider和当前时间更新

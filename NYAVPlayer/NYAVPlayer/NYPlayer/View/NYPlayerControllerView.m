@@ -11,6 +11,31 @@
 #import "NYSpeedLoadingView.h"
 #import "NYSmallView.h"
 #import "NYPlayerGestureControl.h"
+#import "NYVolumeBrightnessView.h"
+
+#pragma mark - NYPlayerGestureControl手势
+@interface NYPlayerControllerView (NYPlayerGestureControl)
+/// 单击手势事件
+- (void)gestureSingleTapped:(NYPlayerGestureControl *)gestureControl;
+
+/// 双击手势事件
+- (void)gestureDoubleTapped:(NYPlayerGestureControl *)gestureControl;
+
+/// 开始滑动手势事件
+- (void)gestureBeganPan:(NYPlayerGestureControl *)gestureControl panDirection:(NYPanDirection)direction panLocation:(NYPanLocation)location;
+
+/// 滑动中手势事件
+- (void)gestureChangedPan:(NYPlayerGestureControl *)gestureControl panDirection:(NYPanDirection)direction panLocation:(NYPanLocation)location withVelocity:(CGPoint)velocity ;
+
+/// 滑杆结束滑动
+- (void)sliderChangeEnded ;
+/// 滑动结束手势事件
+- (void)gestureEndedPan:(NYPlayerGestureControl *)gestureControl panDirection:(NYPanDirection)direction panLocation:(NYPanLocation)location ;
+
+/// 捏合手势事件，这里改变了视频的填充模式
+- (void)gesturePinched:(NYPlayerGestureControl *)gestureControl scale:(float)scale ;
+@end
+
 /** NYPlayerControllerView 的tag*/
 NSInteger const NYPlayerControllerViewTag = 2019741006666;
 
@@ -24,11 +49,17 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
 /// 加载loading
 @property (nonatomic, weak) NYSpeedLoadingView *loadingView;
 /// 封面图
-@property (nonatomic, strong) UIImageView *coverImageView;
+@property (nonatomic, weak) UIImageView *coverImageView;
 /// 中间播放或暂停按钮
-@property (nonatomic, strong) UIButton *playOrPauseBtn;
+@property (nonatomic, weak) UIButton *playOrPauseBtn;
 /// 中间重播按钮
-@property (nonatomic, strong) UIButton *replayBtn;
+@property (nonatomic, weak) UIButton *replayBtn;
+/// 底部播放进度
+@property (nonatomic, weak) NYSliderView *bottomProgres;
+
+// 0...1.0, where 1.0 is maximum brightness. Only supported by main screen.
+@property (nonatomic) float brightness;
+@property (nonatomic, weak) NYVolumeBrightnessView *volumeBrightnessView;
 
 @property (nonatomic, strong) id <NYPlayerMediaPlayback> currentManager;
 
@@ -50,7 +81,6 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
     NYLog(@"delloc");
     [self.currentManager stop];
 }
-
 static NYPlayerControllerView *_shareInstance;
 + (instancetype)sharePlayer {
     if (!_shareInstance) {
@@ -59,7 +89,6 @@ static NYPlayerControllerView *_shareInstance;
     }
     return _shareInstance;
 }
-
 + (instancetype)allocWithZone:(struct _NSZone *)zone {
     
     if (!_shareInstance) {
@@ -78,7 +107,6 @@ static NYPlayerControllerView *_shareInstance;
     _shareInstance.autoFadeTimeInterval = 0.2;
     _shareInstance.autoHiddenTimeInterval = 2.5;
 }
-
 -(void)setFrame:(CGRect)frame{
     CGFloat maxW = frame.size.width;
     CGFloat maxH = frame.size.height;
@@ -113,9 +141,14 @@ static NYPlayerControllerView *_shareInstance;
     CGFloat playOrPauseBtnY = (maxH - playOrPauseBtnH) * 0.5;
     self.playOrPauseBtn.frame = CGRectMake(playOrPauseBtnX, playOrPauseBtnY, playOrPauseBtnW, playOrPauseBtnH);
     self.replayBtn.frame = self.playOrPauseBtn.frame;
+    
+    CGFloat min_y = iPhoneX ? 54 : 30;
+    self.volumeBrightnessView.frame = CGRectMake(0, min_y, 170, 35);
+    self.volumeBrightnessView.ny_centerX = self.ny_centerX;
+    CGFloat bottomProgressH = 1;
+    self.bottomProgres.frame = CGRectMake(0, maxH - bottomProgressH, maxW, bottomProgressH);
     [super setFrame:frame];
 }
-
 /// 设置回调
 -(void)setupClick{
     @weakify(self)
@@ -149,23 +182,126 @@ static NYPlayerControllerView *_shareInstance;
     
     [self.bottomControllerView setFullScreenBtnBlock:^(NYPlayerBottomControllerView * _Nonnull bottomView) {
         @strongify(self)
-        [self goFullScreenWithisLeft:NO animated:YES];
+        if (self.playerViewStyle == NYPlayererViewStyleDetail) {
+            [self goFullScreenWithisLeft:NO animated:YES];
+        }else if (self.playerViewStyle == NYPlayererViewStyleFullScreen) {
+            [self goDetailVCanimated:YES];
+        }
+        
     }];
     
 }
 
 /// UI
 -(void)setupUI{
+    self.layer.masksToBounds = YES;
     /**顶部*/
     [self topView];
-    self.topView.backgroundColor = [UIColor redColor];
     /**底部*/
     [self bottomControllerView];
     /**loading*/
     [self loadingView];
     /** 底部控制view*/
-    self.bottomControllerView.backgroundColor = [UIColor greenColor];
     [self coverImageView];
+    
+    [self playOrPauseBtn];
+    
+    [self replayBtn];
+}
+// 设置播放控制器的各种回掉
+-(void)setupCurrentManager{
+    //    self.currentManager.muted = NO;
+    //    self.currentManager.volume = 1;
+    [self insertSubview:self.currentManager.view atIndex:0];
+    self.currentManager.view.frame = self.bounds;
+    @weakify(self)
+    //播放结束回调
+    [self.currentManager setPlayerDidToEnd:^(id<NYPlayerMediaPlayback>  _Nonnull asset) {
+        @strongify(self)
+        NYLog(@"--- end");
+        self.replayBtn.hidden = NO;
+        self.playOrPauseBtn.hidden = YES;
+    }];
+    //加载状态改变
+    [self.currentManager setPlayerLoadStateChanged:^(id<NYPlayerMediaPlayback>  _Nonnull asset, NYPlayerLoadState loadState) {
+        @strongify(self)
+        if (loadState == NYPlayerLoadStatePrepare) {
+            self.coverImageView.hidden = NO;
+        } else if (loadState == NYPlayerLoadStatePlaythroughOK || loadState == NYPlayerLoadStatePlayable) {
+            self.coverImageView.hidden = YES;
+            asset.view.backgroundColor = [UIColor blackColor];
+        }
+        if (loadState == NYPlayerLoadStateStalled && asset.isPlaying) {
+            [self.loadingView startAnimating];
+        } else if ((loadState == NYPlayerLoadStateStalled || loadState == NYPlayerLoadStatePrepare) && asset.isPlaying) {
+            [self.loadingView startAnimating];
+        } else {
+            [self.loadingView stopAnimating];
+        }
+    }];
+    //播放状态改变
+    [self.currentManager setPlayerPlayStateChanged:^(id<NYPlayerMediaPlayback>  _Nonnull asset, NYPlayerPlaybackState playState) {
+        @strongify(self)
+        if (playState == NYPlayerPlayStatePlaying) {
+            [self playBtnSelectedState:NO];
+            /// 开始播放时候判断是否显示loading
+            if (asset.loadState == NYPlayerLoadStateStalled) {
+                [self.loadingView startAnimating];
+            } else if ((asset.loadState == NYPlayerLoadStateStalled || asset.loadState == NYPlayerLoadStatePrepare)) {
+                [self.loadingView startAnimating];
+            }
+        } else if (playState == NYPlayerPlayStatePaused) {
+            [self playBtnSelectedState:YES];
+            /// 暂停的时候隐藏loading
+            [self.loadingView stopAnimating];
+        } else if (playState == NYPlayerPlayStatePlayFailed) {
+            [self.loadingView stopAnimating];
+        } else if (playState == NYPlayerPlayStatePlayStopped){
+            NYLog(@"NYPlayerPlayStatePlayStopped");
+        }else{
+            NYLog(@"else");
+        }
+    }];
+    //播放进度改变回调
+    [self.currentManager setPlayerPlayTimeChanged:^(id<NYPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval currentTime, NSTimeInterval duration) {
+        @strongify(self)
+        float progress = 0;
+        if (duration == 0) {
+            progress = 0;
+        }
+        progress = currentTime / duration;
+        if (!self.bottomControllerView.slider.isdragging) {
+            NSString *currentTimeString = [NYUtilities convertTimeSecond:currentTime];
+            NSString *totalTimeString = [NYUtilities convertTimeSecond:duration];
+            self.bottomControllerView.slider.value = progress;
+            self.bottomControllerView.currentTimeLabel.text = currentTimeString;
+            self.bottomControllerView.totalTimeLabel.text = totalTimeString;
+            self.bottomControllerView.slider.value = progress;
+            self.bottomControllerView.frame = self.bottomControllerView.frame;
+        }
+        self.bottomProgres.value = progress;
+    }];
+    /// 缓冲改变回调
+    [self.currentManager setPlayerBufferTimeChanged:^(id<NYPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval bufferTime) {
+        @strongify(self)
+        float bufferProgress = 0;
+        if (asset.totalTime == 0) {
+            bufferProgress = 0;
+        }
+        bufferProgress = asset.bufferTime / asset.totalTime;
+        self.bottomControllerView.slider.bufferValue = bufferProgress;
+        self.bottomProgres.bufferValue = bufferProgress;
+    }];
+    
+    NSError *error = nil;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
+    [[AVAudioSession sharedInstance] setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
+    
+    
+    // 准备好了将要播放
+    [self.currentManager setPlayerReadyToPlay:^(id<NYPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
+        
+    }];
 }
 #pragma mark - property
 -(NYPlayerTopView *)topView{
@@ -176,7 +312,6 @@ static NYPlayerControllerView *_shareInstance;
     }
     return _topView;
 }
-
 -(NYPlayerBottomControllerView *)bottomControllerView{
     if (!_bottomControllerView) {
         NYPlayerBottomControllerView *view = [[NYPlayerBottomControllerView alloc] init];
@@ -185,7 +320,6 @@ static NYPlayerControllerView *_shareInstance;
     }
     return _bottomControllerView;
 }
-
 -(NYSpeedLoadingView *)loadingView{
     if (!_loadingView) {
         NYSpeedLoadingView *loadingView = [[NYSpeedLoadingView alloc] init];
@@ -211,21 +345,30 @@ static NYPlayerControllerView *_shareInstance;
         UIButton *replayBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [self addSubview:replayBtn];
         [replayBtn addTarget:self action:@selector(replayBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        
+        replayBtn.hidden = YES;
         _replayBtn = replayBtn;
-        [_replayBtn setImage:NYPlayer_Image(@"icVideoPlay") forState:UIControlStateNormal];
+        [_replayBtn setImage:NYPlayer_Image(@"ic_video_replay") forState:UIControlStateNormal];
     }
-    return _playOrPauseBtn;
+    return _replayBtn;
 }
--(id<NYPlayerMediaPlayback>)currentManager{
-    if (!_currentManager) {
-        NYAVPlayerManager *currentManager = [[NYAVPlayerManager alloc] init];
-        _currentManager = currentManager;
-        _currentManager.shouldAutoPlay = NO;
+- (NYVolumeBrightnessView *)volumeBrightnessView {
+    if (!_volumeBrightnessView) {
+        NYVolumeBrightnessView *volumeBrightnessView = [[NYVolumeBrightnessView alloc] init];
+        [self addSubview:volumeBrightnessView];
+        _volumeBrightnessView = volumeBrightnessView;
+//        _volumeBrightnessView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
     }
-    return _currentManager;
+    return _volumeBrightnessView;
 }
 
+
+- (float)brightness {
+    return [UIScreen mainScreen].brightness;
+}
+- (void)setBrightness:(float)brightness {
+    brightness = MIN(MAX(0, brightness), 1);
+    [UIScreen mainScreen].brightness = brightness;
+}
 - (UIImageView *)coverImageView {
     if (!_coverImageView) {
         UIImageView *coverImageView = [[UIImageView alloc] init];
@@ -237,13 +380,39 @@ static NYPlayerControllerView *_shareInstance;
     }
     return _coverImageView;
 }
+- (NYSliderView *)bottomProgres {
+    if (!_bottomProgres) {
+        NYSliderView *bottomProgres = [[NYSliderView alloc] init];
+        [self addSubview:bottomProgres];
+        _bottomProgres = bottomProgres;
+        _bottomProgres.maximumTrackTintColor = [UIColor clearColor];
+        _bottomProgres.minimumTrackTintColor = [UIColor whiteColor];
+        _bottomProgres.bufferTrackTintColor  = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
+        _bottomProgres.sliderHeight = 1;
+        _bottomProgres.isHideSliderBlock = NO;
+    }
+    return _bottomProgres;
+}
+-(id<NYPlayerMediaPlayback>)currentManager{
+    if (!_currentManager) {
+        NYAVPlayerManager *currentManager = [[NYAVPlayerManager alloc] init];
+        _currentManager = currentManager;
+        _currentManager.shouldAutoPlay = NO;
+    }
+    return _currentManager;
+}
 -(NYPlayerGestureControl *)gestureControl{
     if (!_gestureControl) {
         NYPlayerGestureControl *gestureControl = [[NYPlayerGestureControl alloc] init];
         _gestureControl = gestureControl;
         @weakify(self)
         gestureControl.triggerCondition = ^BOOL(NYPlayerGestureControl * _Nonnull control, NYPlayerGestureType type, UIGestureRecognizer * _Nonnull gesture, UITouch *touch) {
-            //@strongify(self)
+            @strongify(self)
+            if (self.playerViewStyle == NYPlayererViewStyleDetail) {
+                if (type == NYPlayerGestureTypePan){
+                    return NO;
+                }
+            }
             return YES;
         };
         
@@ -297,113 +466,52 @@ static NYPlayerControllerView *_shareInstance;
     }
     return _gestureControl;
 }
-
-
-
-// 设置播放控制器的各种回掉
--(void)setupCurrentManager{
-    //    self.currentManager.muted = NO;
-    //    self.currentManager.volume = 1;
-    [self insertSubview:self.currentManager.view atIndex:0];
-    self.currentManager.view.frame = self.bounds;
-    @weakify(self)
-    //播放结束回调
-    [self.currentManager setPlayerDidToEnd:^(id<NYPlayerMediaPlayback>  _Nonnull asset) {
-        //        @strongify(self)
-        NYLog(@"--- end");
-    }];
-    //加载状态改变
-    [self.currentManager setPlayerLoadStateChanged:^(id<NYPlayerMediaPlayback>  _Nonnull asset, NYPlayerLoadState loadState) {
-        @strongify(self)
-        if (loadState == NYPlayerLoadStatePrepare) {
-            self.coverImageView.hidden = NO;
-        } else if (loadState == NYPlayerLoadStatePlaythroughOK || loadState == NYPlayerLoadStatePlayable) {
-            self.coverImageView.hidden = YES;
-            asset.view.backgroundColor = [UIColor blackColor];
-        }
-        if (loadState == NYPlayerLoadStateStalled && asset.isPlaying) {
-            [self.loadingView startAnimating];
-        } else if ((loadState == NYPlayerLoadStateStalled || loadState == NYPlayerLoadStatePrepare) && asset.isPlaying) {
-            [self.loadingView startAnimating];
-        } else {
-            [self.loadingView stopAnimating];
-        }
-    }];
-    //播放状态改变
-    [self.currentManager setPlayerPlayStateChanged:^(id<NYPlayerMediaPlayback>  _Nonnull asset, NYPlayerPlaybackState playState) {
-        @strongify(self)
-        if (playState == NYPlayerPlayStatePlaying) {
-            [self playBtnSelectedState:NO];
-            /// 开始播放时候判断是否显示loading
-            if (asset.loadState == NYPlayerLoadStateStalled) {
-                [self.loadingView startAnimating];
-            } else if ((asset.loadState == NYPlayerLoadStateStalled || asset.loadState == NYPlayerLoadStatePrepare)) {
-                [self.loadingView startAnimating];
-            }
-        } else if (playState == NYPlayerPlayStatePaused) {
-            [self playBtnSelectedState:YES];
-            /// 暂停的时候隐藏loading
-            [self.loadingView stopAnimating];
-        } else if (playState == NYPlayerPlayStatePlayFailed) {
-            [self.loadingView stopAnimating];
-        }
-        if (playState == NYPlayerPlayStatePlayStopped){
-            self.replayBtn.hidden = NO;
-            self.playOrPauseBtn.hidden = YES;
-        }else{
-            self.replayBtn.hidden = YES;
-            self.playOrPauseBtn.hidden = NO;
-        }
-    }];
-    //播放进度改变回调
-    [self.currentManager setPlayerPlayTimeChanged:^(id<NYPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval currentTime, NSTimeInterval duration) {
-        @strongify(self)
-        float progress = 0;
-        if (duration == 0) {
-            progress = 0;
-        }
-        progress = currentTime / duration;
-        if (!self.bottomControllerView.slider.isdragging) {
-            NSString *currentTimeString = [NYUtilities convertTimeSecond:currentTime];
-            NSString *totalTimeString = [NYUtilities convertTimeSecond:duration];
-            self.bottomControllerView.slider.value = progress;
-            self.bottomControllerView.currentTimeLabel.text = currentTimeString;
-            self.bottomControllerView.totalTimeLabel.text = totalTimeString;
-            self.bottomControllerView.slider.value = progress;
-            self.bottomControllerView.frame = self.bottomControllerView.frame;
-        }
-        self.bottomControllerView.bottomProgres.value = progress;
-    }];
-    /// 缓冲改变回调
-    [self.currentManager setPlayerBufferTimeChanged:^(id<NYPlayerMediaPlayback>  _Nonnull asset, NSTimeInterval bufferTime) {
-        @strongify(self)
-        float bufferProgress = 0;
-        if (asset.totalTime == 0) {
-            bufferProgress = 0;
-        }
-        bufferProgress = asset.bufferTime / asset.totalTime;
-        self.bottomControllerView.slider.bufferValue = bufferProgress;
-        self.bottomControllerView.bottomProgres.bufferValue = bufferProgress;
-    }];
+-(void)setPlayerViewStyle:(NYPlayererViewStyle)playerViewStyle{
+    _playerViewStyle = playerViewStyle;
+    if (playerViewStyle == NYPlayererViewStyleNone) {
+        self.currentManager.muted = YES;
+    }else{
+        self.currentManager.muted = NO;
+    }
     
-    NSError *error = nil;
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
-    [[AVAudioSession sharedInstance] setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
-    
-    
-    // 准备好了将要播放
-    [self.currentManager setPlayerReadyToPlay:^(id<NYPlayerMediaPlayback>  _Nonnull asset, NSURL * _Nonnull assetURL) {
+    self.bottomProgres.hidden = self.playerViewStyle == NYPlayererViewStyleFullScreen;
+
+    if (playerViewStyle == NYPlayererViewStyleNone) {//此状态 无控制 只有站位图和播放状态显示
+        self.topView.hidden = YES;
+        self.bottomControllerView.hidden = YES;
         
-    }];
+    }else if (playerViewStyle == NYPlayererViewStyleAnimating) {//在动画中
+        self.topView.hidden = YES;
+        self.bottomControllerView.hidden = YES;
+        
+    }else if (playerViewStyle == NYPlayererViewStyleFullScreen) {//全屏状态
+        self.topView.hidden = NO;
+        self.topView.downloadBtn.hidden = NO;
+        self.topView.smallBtn.hidden = YES;
+        
+        self.bottomControllerView.hidden = NO;
+        self.bottomControllerView.rateBtn.hidden = NO;
+        self.bottomControllerView.frame = self.bottomControllerView.frame;
+        self.bottomControllerView.fullScreenBtn.selected = YES;
+    }else if (playerViewStyle == NYPlayererViewStyleDetail) {//竖屏 详情状态
+        self.topView.hidden = NO;
+        self.topView.downloadBtn.hidden = YES;
+        self.topView.smallBtn.hidden = NO;
+        
+        self.bottomControllerView.hidden = NO;
+        self.bottomControllerView.rateBtn.hidden = YES;
+        self.bottomControllerView.frame = self.bottomControllerView.frame;
+        self.bottomControllerView.fullScreenBtn.selected = NO;
+    }
+    
+    if (playerViewStyle == NYPlayererViewStyleSmall) {//小窗状态
+        self.topView.hidden = YES;
+        self.bottomControllerView.hidden = YES;
+        self.smallView.hidden = NO;
+    }else{
+        self.smallView.hidden = YES;
+    }
 }
-
--(void)addNotification{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
-}
--(void)removeNotification{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 #pragma mark - click
 -(void)playOrPauseBtnClick{
     if (self.playOrPauseBtn.isSelected) {
@@ -414,30 +522,17 @@ static NYPlayerControllerView *_shareInstance;
 }
 -(void)replayBtnClick:(UIButton *)sender{
     [self.currentManager replay];
+    self.replayBtn.hidden = YES;
+    self.playOrPauseBtn.hidden = NO;
 }
-
 #pragma mark - other
 - (void)playBtnSelectedState:(BOOL)selected {
     self.playOrPauseBtn.selected = selected;
     self.bottomControllerView.playOrPauseBtn.selected = selected;
 }
 
-#pragma mark - UIDeviceOrientationDidChangeNotification
--(void)deviceOrientationDidChange:(NSNotification *)notification{
-    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
-    if (deviceOrientation == UIDeviceOrientationLandscapeLeft) {
-        NYLog(@"左边");
-        [self goFullScreenWithisLeft:NO animated:YES];
-    }else if(deviceOrientation == UIDeviceOrientationPortrait){
-        NYLog(@"竖着");
-        [self quitFullScreenAnimated:YES];
-    }else if(deviceOrientation == UIDeviceOrientationLandscapeRight){
-        NYLog(@"右边");
-        [self goFullScreenWithisLeft:YES animated:YES];
-    }else{
-        NYLog(@"其他");
-    }
-}
+
+#pragma mark - public
 /// 进入详情页
 -(void)goDetailVCanimated:(BOOL)animated{
     if (animated) {
@@ -449,7 +544,6 @@ static NYPlayerControllerView *_shareInstance;
     }];
     self.detailVC = vc;
 }
-
 /// 进入全屏模式
 -(void)goFullScreenWithisLeft:(BOOL)isLeft animated:(BOOL)animated{
     if (animated) {
@@ -458,6 +552,7 @@ static NYPlayerControllerView *_shareInstance;
     NYVideoFullScreenVC *vc = [[NYVideoFullScreenVC alloc] initWithIsLeft:isLeft];
     [self.detailVC presentViewController:vc animated:animated completion:^{
         self.playerViewStyle = NYPlayererViewStyleFullScreen;
+        [self.volumeBrightnessView removeSystemVolumeView];
     }];
     self.fullScreenVC = vc;
 }
@@ -471,6 +566,7 @@ static NYPlayerControllerView *_shareInstance;
     }
     [self.fullScreenVC dismissViewControllerAnimated:YES completion:^{
         self.playerViewStyle = NYPlayererViewStyleDetail;
+        [self.volumeBrightnessView addSystemVolumeView];
     }];
 }
 /// 去小窗
@@ -518,53 +614,10 @@ static NYPlayerControllerView *_shareInstance;
     NSString *smallViewCenterStr = NSStringFromCGPoint(self.smallView.center);
     [[NSUserDefaults standardUserDefaults] setObject:smallViewCenterStr forKey:NYSmallViewCenterStringKey];
 }
-
-
-
--(void)setPlayerViewStyle:(NYPlayererViewStyle)playerViewStyle{
-    _playerViewStyle = playerViewStyle;
-    if (playerViewStyle == NYPlayererViewStyleNone) {//此状态 无控制 只有站位图和播放状态显示
-        self.topView.hidden = YES;
-        self.bottomControllerView.hidden = YES;
-        
-    }else if (playerViewStyle == NYPlayererViewStyleAnimating) {//在动画中
-        self.topView.hidden = YES;
-        self.bottomControllerView.hidden = YES;
-        
-    }else if (playerViewStyle == NYPlayererViewStyleFullScreen) {//全屏状态
-        self.topView.hidden = NO;
-        self.topView.downloadBtn.hidden = NO;
-        self.topView.smallBtn.hidden = YES;
-        
-        self.bottomControllerView.hidden = NO;
-        self.bottomControllerView.rateBtn.hidden = NO;
-        self.bottomControllerView.frame = self.bottomControllerView.frame;
-    }else if (playerViewStyle == NYPlayererViewStyleDetail) {//竖屏 详情状态
-        self.topView.hidden = NO;
-        self.topView.downloadBtn.hidden = YES;
-        self.topView.smallBtn.hidden = NO;
-        
-        self.bottomControllerView.hidden = NO;
-        self.bottomControllerView.rateBtn.hidden = YES;
-        self.bottomControllerView.frame = self.bottomControllerView.frame;
-        
-        self.gestureControl.disablePanMovingDirection = NYPlayerDisablePanMovingDirectionVertical;
-    }
-        
-        
-    if (playerViewStyle == NYPlayererViewStyleSmall) {//小窗状态
-        self.topView.hidden = YES;
-        self.bottomControllerView.hidden = YES;
-        self.smallView.hidden = NO;
-    }else{
-        self.smallView.hidden = YES;
-    }
+-(void)playWithURLStr:(NSString *)urlStr superView:(UIView *)superView isAutoPlay:(BOOL)isAutoPlay{
+    [self playWithURLStr:urlStr superView:superView isAutoPlay:isAutoPlay nearestVC:nil];
 }
-
--(void)playWithURLStr:(NSString *)urlStr superView:(UIView *)superView isAutoPlay:(BOOL)isAutoPlay playerViewStyle:(NYPlayererViewStyle)playerViewStyle{
-    [self playWithURLStr:urlStr superView:superView isAutoPlay:isAutoPlay playerViewStyle:playerViewStyle nearestVC:nil];
-}
--(void)playWithURLStr:(NSString *)urlStr superView:(UIView *)superView isAutoPlay:(BOOL)isAutoPlay playerViewStyle:(NYPlayererViewStyle)playerViewStyle nearestVC:(nullable UIViewController *)nearestVC{
+-(void)playWithURLStr:(NSString *)urlStr superView:(UIView *)superView isAutoPlay:(BOOL)isAutoPlay nearestVC:(nullable UIViewController *)nearestVC{
     
     if ([_urlStr isEqualToString:urlStr] && self.currentManager.assetURL) {
         if ([nearestVC isKindOfClass:NYVideoDetailVC.class]) {
@@ -588,7 +641,6 @@ static NYPlayerControllerView *_shareInstance;
     }else{
         self.playOrPauseBtn.selected = YES;
     }
-    self.playerViewStyle = playerViewStyle;
     [self setupCurrentManager];
     [self resetControlView];
     [self addNotification];
@@ -606,10 +658,15 @@ static NYPlayerControllerView *_shareInstance;
     self.bottomControllerView.totalTimeLabel.text = @"00:00";
     self.bottomControllerView.playOrPauseBtn.selected = YES;
     self.backgroundColor = [UIColor blackColor];
+    self.volumeBrightnessView.hidden = YES;
+    self.replayBtn.hidden = YES;
     [self removeNotification];
 }
 
+@end
+
 #pragma mark - 控制层的现实隐藏
+@implementation NYPlayerControllerView(NYControllerShowHidden)
 - (void)showControlView {
     self.topView.alpha           = 1;
     self.bottomControllerView.alpha        = 1;
@@ -618,7 +675,6 @@ static NYPlayerControllerView *_shareInstance;
     self.bottomControllerView.ny_y         = self.ny_height - self.bottomControllerView.ny_height;
     self.playOrPauseBtn.alpha        = 1;
 }
-
 - (void)hideControlView {
     self.isShow                      = NO;
     self.topView.ny_y            = -self.topView.ny_height;
@@ -627,7 +683,6 @@ static NYPlayerControllerView *_shareInstance;
     self.topView.alpha           = 0;
     self.bottomControllerView.alpha        = 0;
 }
-
 - (void)autoFadeOutControlView {
     self.controlViewAppeared = YES;
     [self cancelAutoFadeOutControlView];
@@ -638,7 +693,6 @@ static NYPlayerControllerView *_shareInstance;
     });
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.autoHiddenTimeInterval * NSEC_PER_SEC)), dispatch_get_main_queue(),self.afterBlock);
 }
-
 /// 取消延时隐藏controlView的方法
 - (void)cancelAutoFadeOutControlView {
     if (self.afterBlock) {
@@ -646,7 +700,6 @@ static NYPlayerControllerView *_shareInstance;
         self.afterBlock = nil;
     }
 }
-
 /// 隐藏控制层
 - (void)hideControlViewWithAnimated:(BOOL)animated {
     self.controlViewAppeared = NO;
@@ -656,7 +709,6 @@ static NYPlayerControllerView *_shareInstance;
         
     }];
 }
-
 /// 显示控制层
 - (void)showControlViewWithAnimated:(BOOL)animated {
     self.controlViewAppeared = YES;
@@ -667,78 +719,9 @@ static NYPlayerControllerView *_shareInstance;
         
     }];
 }
-
-#pragma mark - NYPlayerGestureControl手势
-/// 单击手势事件
-- (void)gestureSingleTapped:(NYPlayerGestureControl *)gestureControl {
-    if (self.playerViewStyle == NYPlayererViewStyleSmall || self.playerViewStyle == NYPlayererViewStyleNone) {
-        [self goDetailVCanimated:YES];
-    }else if(self.playerViewStyle == NYPlayererViewStyleFullScreen || self.playerViewStyle == NYPlayererViewStyleDetail){
-        if (self.controlViewAppeared) {
-            [self hideControlViewWithAnimated:YES];
-        } else {
-            /// 显示之前先把控制层复位，先隐藏后显示
-            [self hideControlViewWithAnimated:NO];
-            [self showControlViewWithAnimated:YES];
-        }
-    }
-}
-
-/// 双击手势事件
-- (void)gestureDoubleTapped:(NYPlayerGestureControl *)gestureControl {
-    //    [self playOrPause];
-}
-
-/// 开始滑动手势事件
-- (void)gestureBeganPan:(NYPlayerGestureControl *)gestureControl panDirection:(NYPanDirection)direction panLocation:(NYPanLocation)location {
-    if (direction == NYPanDirectionH) {
-        self.sumTime = self.currentManager.currentTime;
-    }
-}
-
-/// 滑动中手势事件
-- (void)gestureChangedPan:(NYPlayerGestureControl *)gestureControl panDirection:(NYPanDirection)direction panLocation:(NYPanLocation)location withVelocity:(CGPoint)velocity {
-    
-}
-
-/// 滑杆结束滑动
-- (void)sliderChangeEnded {
-    self.bottomControllerView.slider.isdragging = NO;
-    [UIView animateWithDuration:0.3 animations:^{
-        self.bottomControllerView.slider.sliderBtn.transform = CGAffineTransformIdentity;
-    }];
-}
-/// 滑动结束手势事件
-- (void)gestureEndedPan:(NYPlayerGestureControl *)gestureControl panDirection:(NYPanDirection)direction panLocation:(NYPanLocation)location {
-    @weakify(self)
-    if (direction == NYPanDirectionH && self.sumTime >= 0 && self.currentManager.totalTime > 0) {
-        [self.currentManager seekToTime:self.sumTime completionHandler:^(BOOL finished) {
-            @strongify(self)
-            /// 左右滑动调节播放进度
-            [self sliderChangeEnded];
-            if (self.controlViewAppeared) {
-                [self autoFadeOutControlView];
-            }
-        }];
-        self.sumTime = 0;
-    }
-}
-
-/// 捏合手势事件，这里改变了视频的填充模式
-- (void)gesturePinched:(NYPlayerGestureControl *)gestureControl scale:(float)scale {
-    if (scale > 1) {
-        self.currentManager.scalingMode = NYPlayerScalingModeAspectFill;
-    } else {
-        self.currentManager.scalingMode = NYPlayerScalingModeAspectFit;
-    }
-}
-
 @end
-
-
 #pragma mark - NYSliderViewDelegate 滑杆相关
 @interface NYPlayerControllerView (NYSliderViewDelegate)
-
 @end
 @implementation NYPlayerControllerView(NYSliderViewDelegate)
 // 滑块滑动开始
@@ -786,6 +769,137 @@ static NYPlayerControllerView *_shareInstance;
     } else {
         self.bottomControllerView.slider.isdragging = NO;
         self.bottomControllerView.slider.value = 0;
+    }
+}
+@end
+#pragma mark - Notification
+@implementation NYPlayerControllerView(NYNotification)
+-(void)addNotification{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(volumeChanged:)
+                                                 name:@"AVSystemController_SystemVolumeDidChangeNotification"
+                                               object:nil];
+}
+-(void)removeNotification{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+/// UIDeviceOrientationDidChangeNotification
+-(void)deviceOrientationDidChange:(NSNotification *)notification{
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    if (deviceOrientation == UIDeviceOrientationLandscapeLeft) {
+        NYLog(@"左边");
+        [self goFullScreenWithisLeft:NO animated:YES];
+    }else if(deviceOrientation == UIDeviceOrientationPortrait){
+        NYLog(@"竖着");
+        [self quitFullScreenAnimated:YES];
+    }else if(deviceOrientation == UIDeviceOrientationLandscapeRight){
+        NYLog(@"右边");
+        [self goFullScreenWithisLeft:YES animated:YES];
+    }else{
+        NYLog(@"其他");
+    }
+}
+/// 音量改变的通知
+- (void)volumeChanged:(NSNotification *)notification {
+    float volume = [[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
+    if (self.playerViewStyle == NYPlayererViewStyleFullScreen) {
+        [self.volumeBrightnessView updateProgress:volume withVolumeBrightnessType:NYVolumeBrightnessTypeVolume];
+    } else {
+        [self.volumeBrightnessView addSystemVolumeView];
+    }
+}
+@end
+#pragma mark - NYPlayerGestureControl手势
+@implementation NYPlayerControllerView(NYPlayerGestureControl)
+/// 单击手势事件
+- (void)gestureSingleTapped:(NYPlayerGestureControl *)gestureControl {
+    if (self.playerViewStyle == NYPlayererViewStyleSmall || self.playerViewStyle == NYPlayererViewStyleNone) {
+        [self goDetailVCanimated:YES];
+    }else if(self.playerViewStyle == NYPlayererViewStyleFullScreen || self.playerViewStyle == NYPlayererViewStyleDetail){
+        if (self.controlViewAppeared) {
+            [self hideControlViewWithAnimated:YES];
+        } else {
+            /// 显示之前先把控制层复位，先隐藏后显示
+            [self hideControlViewWithAnimated:NO];
+            [self showControlViewWithAnimated:YES];
+        }
+    }
+}
+
+/// 双击手势事件
+- (void)gestureDoubleTapped:(NYPlayerGestureControl *)gestureControl {
+    //    [self playOrPause];
+}
+
+/// 开始滑动手势事件
+- (void)gestureBeganPan:(NYPlayerGestureControl *)gestureControl panDirection:(NYPanDirection)direction panLocation:(NYPanLocation)location {
+    /*
+    if (direction == NYPanDirectionH) {
+        self.sumTime = self.currentManager.currentTime;
+    }
+     */
+}
+
+/// 滑动中手势事件
+- (void)gestureChangedPan:(NYPlayerGestureControl *)gestureControl panDirection:(NYPanDirection)direction panLocation:(NYPanLocation)location withVelocity:(CGPoint)velocity {
+    if (direction == NYPanDirectionH) {
+        /*
+        // 每次滑动需要叠加时间
+        self.sumTime += velocity.x / 200;
+        // 需要限定sumTime的范围
+        NSTimeInterval totalMovieDuration = self.player.totalTime;
+        if (totalMovieDuration == 0) return;
+        if (self.sumTime > totalMovieDuration) self.sumTime = totalMovieDuration;
+        if (self.sumTime < 0) self.sumTime = 0;
+        BOOL style = NO;
+        if (velocity.x > 0) style = YES;
+        if (velocity.x < 0) style = NO;
+        if (velocity.x == 0) return;
+        [self sliderValueChangingValue:self.sumTime/totalMovieDuration isForward:style];
+         */
+    } else if (direction == NYPanDirectionV) {
+        if (self.playerViewStyle == NYPlayererViewStyleFullScreen) {
+            if (location == NYPanLocationLeft) { /// 调节亮度
+                self.brightness -= (velocity.y) / 10000;
+                [self.volumeBrightnessView updateProgress:self.brightness withVolumeBrightnessType:NYVolumeBrightnessTypeumeBrightness];
+            } else if (location == NYPanLocationRight) { /// 调节声音
+                self.currentManager.volume -= (velocity.y) / 10000;
+                [self.volumeBrightnessView updateProgress:self.currentManager.volume withVolumeBrightnessType:NYVolumeBrightnessTypeVolume];
+            }
+        }
+    }
+}
+
+/// 滑杆结束滑动
+- (void)sliderChangeEnded {
+    self.bottomControllerView.slider.isdragging = NO;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.bottomControllerView.slider.sliderBtn.transform = CGAffineTransformIdentity;
+    }];
+}
+/// 滑动结束手势事件
+- (void)gestureEndedPan:(NYPlayerGestureControl *)gestureControl panDirection:(NYPanDirection)direction panLocation:(NYPanLocation)location {
+    @weakify(self)
+    if (direction == NYPanDirectionH && self.sumTime >= 0 && self.currentManager.totalTime > 0) {
+        [self.currentManager seekToTime:self.sumTime completionHandler:^(BOOL finished) {
+            @strongify(self)
+            /// 左右滑动调节播放进度
+            [self sliderChangeEnded];
+            if (self.controlViewAppeared) {
+                [self autoFadeOutControlView];
+            }
+        }];
+        self.sumTime = 0;
+    }
+}
+
+/// 捏合手势事件，这里改变了视频的填充模式
+- (void)gesturePinched:(NYPlayerGestureControl *)gestureControl scale:(float)scale {
+    if (scale > 1) {
+        self.currentManager.scalingMode = NYPlayerScalingModeAspectFill;
+    } else {
+        self.currentManager.scalingMode = NYPlayerScalingModeAspectFit;
     }
 }
 

@@ -36,10 +36,12 @@
     CGFloat maxW = frame.size.width;
 //    CGFloat maxH = frame.size.height;
 
-    CGFloat btnW = 24;
+    CGFloat temp = 13;
+    
+    CGFloat btnW = 24 + temp * 2;
     CGFloat btnH = btnW;
-    self.backBtn.frame = CGRectMake(16, 24, btnW, btnH);
-    self.smallBtn.frame = CGRectMake(maxW - btnW - 16, self.backBtn.ny_y, btnW, btnH);
+    self.backBtn.frame = CGRectMake(16 - temp, 24 -temp, btnW, btnH);
+    self.smallBtn.frame = CGRectMake(maxW - btnW - 16 - 13, self.backBtn.ny_y, btnW, btnH);
     self.downloadBtn.frame = self.smallBtn.frame;
     [super setFrame:frame];
 }
@@ -47,7 +49,7 @@
     if (!_backBtn) {
         UIButton *btn = [[UIButton alloc] init];
         [self addSubview:btn];
-        [btn setTitle:@"返回" forState:UIControlStateNormal];
+        [btn setImage:NYPlayer_Image(@"ic_preview_back") forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(backBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         _backBtn = btn;
     }
@@ -57,7 +59,7 @@
     if (!_smallBtn) {
         UIButton *btn = [[UIButton alloc] init];
         [self addSubview:btn];
-        [btn setTitle:@"小窗" forState:UIControlStateNormal];
+        [btn setImage:NYPlayer_Image(@"ic_video_suspension") forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(smallBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         _smallBtn = btn;
     }
@@ -67,7 +69,7 @@
     if (!_downloadBtn) {
         UIButton *btn = [[UIButton alloc] init];
         [self addSubview:btn];
-        [btn setTitle:@"下载" forState:UIControlStateNormal];
+        [btn setImage:NYPlayer_Image(@"ic_video_download") forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(downloadBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         _downloadBtn = btn;
     }
