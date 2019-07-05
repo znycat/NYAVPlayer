@@ -52,17 +52,19 @@
     CGFloat maxW = frame.size.width;
     //CGFloat maxH = frame.size.height;
     
+    CGFloat btnH = 50;
     CGFloat playOrPauseBtnW = 24;
     CGFloat playOrPauseBtnH = playOrPauseBtnW;
-    self.playOrPauseBtn.frame = CGRectMake(8, 40, playOrPauseBtnW, playOrPauseBtnH);
-
+    CGFloat playOrPauseBtnY = 40;
+    self.playOrPauseBtn.frame = CGRectMake(8, playOrPauseBtnY, playOrPauseBtnW, playOrPauseBtnH);
+    
     [self.currentTimeLabel sizeToFit];
     self.currentTimeLabel.frame = CGRectMake(self.playOrPauseBtn.ny_max_x + 6, self.playOrPauseBtn.ny_y, self.currentTimeLabel.ny_width, self.currentTimeLabel.ny_height);
     self.currentTimeLabel.ny_centerY = self.playOrPauseBtn.ny_centerY;
     
     //全屏按钮
     CGFloat fullScreenBtnW = 24;
-    CGFloat fullScreenBtnH = fullScreenBtnW;
+    CGFloat fullScreenBtnH = btnH;
     CGFloat fullScreenBtnX = maxW - fullScreenBtnW - 8;
     CGFloat fullScreenBtnY = self.playOrPauseBtn.ny_y;
     self.fullScreenBtn.frame = CGRectMake(fullScreenBtnX, fullScreenBtnY, fullScreenBtnW, fullScreenBtnH);
@@ -71,7 +73,7 @@
     //倍速按钮
     [self.rateBtn sizeToFit];
     CGFloat rateBtnW = self.rateBtn.ny_width;
-    CGFloat rateBtnH = self.rateBtn.ny_height;
+    CGFloat rateBtnH = btnH;
     CGFloat rateBtnX = self.fullScreenBtn.ny_x - rateBtnW - 14;
     CGFloat rateBtnY = self.playOrPauseBtn.ny_y;
     self.rateBtn.frame = CGRectMake(rateBtnX, rateBtnY, rateBtnW, rateBtnH);
@@ -80,7 +82,7 @@
     //高清按钮
     [self.definitionBtn sizeToFit];
     CGFloat definitionBtnW = self.definitionBtn.ny_width;
-    CGFloat definitionBtnH = self.definitionBtn.ny_height;
+    CGFloat definitionBtnH = btnH;
     CGFloat definitionBtnX = self.rateBtn.ny_x - definitionBtnW - 14;
     CGFloat definitionBtnY = self.playOrPauseBtn.ny_y;
     if (self.rateBtn.hidden) {

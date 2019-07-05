@@ -111,6 +111,7 @@
 		E911A73422CF027600A10E84 /* NYPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				E927449222CF395700B323F9 /* Model */,
 				E911A73522CF027600A10E84 /* NYAVPlayer.bundle */,
 				E911A73622CF027600A10E84 /* Other */,
 				E911A73B22CF027600A10E84 /* View */,
@@ -210,6 +211,13 @@
 				E911A76222CF027600A10E84 /* ZFReachabilityManager.m */,
 			);
 			path = Tool;
+			sourceTree = "<group>";
+		};
+		E927449222CF395700B323F9 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		E93AE92022C61D4200A33805 = {

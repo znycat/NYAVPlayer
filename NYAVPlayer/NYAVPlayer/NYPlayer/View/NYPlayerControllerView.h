@@ -54,6 +54,8 @@ typedef NS_ENUM(NSUInteger, NYPlayererViewStyle) {
 /// 显示控制层
 - (void)showControlViewWithAnimated:(BOOL)animated;
 - (void)autoFadeOutControlView;
+/// 取消延时隐藏controlView的方法
+- (void)cancelAutoFadeOutControlView;
 @end
 #pragma mark - Notification
 @interface NYPlayerControllerView (NYNotification)

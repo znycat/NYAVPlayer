@@ -574,10 +574,16 @@ static NYPlayerControllerView *_shareInstance;
     if (animated) {
         self.playerViewStyle = NYPlayererViewStyleAnimating;
     }
+    [self cancelAutoFadeOutControlView];
     NYVideoFullScreenVC *vc = [[NYVideoFullScreenVC alloc] initWithIsLeft:isLeft];
     [self.detailVC presentViewController:vc animated:animated completion:^{
         self.playerViewStyle = NYPlayererViewStyleFullScreen;
         [self.volumeBrightnessView removeSystemVolumeView];
+        if (self.controlViewAppeared) {
+            [self showControlViewWithAnimated:NO];
+        } else {
+            [self hideControlViewWithAnimated:NO];
+        }
     }];
     self.fullScreenVC = vc;
 }
