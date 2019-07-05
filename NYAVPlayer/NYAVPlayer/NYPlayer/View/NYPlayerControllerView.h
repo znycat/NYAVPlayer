@@ -39,6 +39,8 @@ typedef NS_ENUM(NSUInteger, NYPlayererViewStyle) {
 
 @property (nonatomic,strong)NSArray <NYDefinitionModel *> *definitionModels;
 
+@property (nonatomic, strong) UIImage *coverImage;
+
 /// 控制层自动隐藏的时间，默认2.5秒
 @property (nonatomic, assign) NSTimeInterval autoHiddenTimeInterval;
 

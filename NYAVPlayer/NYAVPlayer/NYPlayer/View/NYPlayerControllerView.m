@@ -57,7 +57,7 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
 /// 中间重播按钮
 @property (nonatomic, weak) UIButton *replayBtn;
 /// 底部播放进度
-@property (nonatomic, strong) NYSliderView *bottomProgres;
+@property (nonatomic, weak) NYSliderView *bottomProgres;
 /// 倍速控制view
 @property (nonatomic, weak)NYRateView *rateView;
 /// 清晰度控制view
@@ -153,6 +153,8 @@ static NYPlayerControllerView *_shareInstance;
     self.volumeBrightnessView.ny_centerX = self.ny_centerX;
     CGFloat bottomProgressH = 1;
     self.bottomProgres.frame = CGRectMake(0, maxH - bottomProgressH, maxW, bottomProgressH);
+    
+    self.coverImageView.frame = CGRectMake(0, 0, maxW, maxH);
     [super setFrame:frame];
 }
 /// 设置回调
@@ -452,10 +454,11 @@ static NYPlayerControllerView *_shareInstance;
         @weakify(self)
         gestureControl.triggerCondition = ^BOOL(NYPlayerGestureControl * _Nonnull control, NYPlayerGestureType type, UIGestureRecognizer * _Nonnull gesture, UITouch *touch) {
             @strongify(self)
-            if (self.playerViewStyle == NYPlayererViewStyleDetail) {
-                if (type == NYPlayerGestureTypePan){
-                    return NO;
+            if (type == NYPlayerGestureTypePan){
+                if (self.playerViewStyle == NYPlayererViewStyleFullScreen) {
+                    return YES;
                 }
+                return NO;
             }
             return YES;
         };
@@ -513,6 +516,9 @@ static NYPlayerControllerView *_shareInstance;
 
 
 #pragma mark - property setter
+-(void)setCoverImage:(UIImage *)coverImage{
+    [self.coverImageView setImage:coverImage];
+}
 - (void)setBrightness:(float)brightness {
     brightness = MIN(MAX(0, brightness), 1);
     [UIScreen mainScreen].brightness = brightness;
@@ -722,6 +728,7 @@ static NYPlayerControllerView *_shareInstance;
         self.playOrPauseBtn.selected = YES;
     }
     [self setupCurrentManager];
+    self.coverImage = [UIImage imageNamed:@"123123"];
     [self resetControlView];
     [self addNotification];
     [self.gestureControl addGestureToView:self];
