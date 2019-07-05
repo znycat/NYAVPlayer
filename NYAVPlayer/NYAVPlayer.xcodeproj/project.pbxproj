@@ -28,6 +28,7 @@
 		E911A77422CF027600A10E84 /* NYKVOController.m in Sources */ = {isa = PBXBuildFile; fileRef = E911A75D22CF027600A10E84 /* NYKVOController.m */; };
 		E911A77522CF027600A10E84 /* NYNetworkSpeedMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = E911A76122CF027600A10E84 /* NYNetworkSpeedMonitor.m */; };
 		E911A77622CF027600A10E84 /* ZFReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E911A76222CF027600A10E84 /* ZFReachabilityManager.m */; };
+		E927449122CF221300B323F9 /* NYRateView.m in Sources */ = {isa = PBXBuildFile; fileRef = E927448F22CF221200B323F9 /* NYRateView.m */; };
 		E93AE92E22C61D4200A33805 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE92D22C61D4200A33805 /* AppDelegate.m */; };
 		E93AE93122C61D4200A33805 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE93022C61D4200A33805 /* ViewController.m */; };
 		E93AE93422C61D4200A33805 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E93AE93222C61D4200A33805 /* Main.storyboard */; };
@@ -79,6 +80,8 @@
 		E911A76022CF027600A10E84 /* NYKVOController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NYKVOController.h; sourceTree = "<group>"; };
 		E911A76122CF027600A10E84 /* NYNetworkSpeedMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NYNetworkSpeedMonitor.m; sourceTree = "<group>"; };
 		E911A76222CF027600A10E84 /* ZFReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFReachabilityManager.m; sourceTree = "<group>"; };
+		E927448F22CF221200B323F9 /* NYRateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NYRateView.m; sourceTree = "<group>"; };
+		E927449022CF221200B323F9 /* NYRateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NYRateView.h; sourceTree = "<group>"; };
 		E93AE92922C61D4200A33805 /* NYAVPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYAVPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E93AE92C22C61D4200A33805 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E93AE92D22C61D4200A33805 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -138,6 +141,8 @@
 				E911A74022CF027600A10E84 /* NYPlayerControllerView.m */,
 				E911A73E22CF027600A10E84 /* NYPlayerTopView.h */,
 				E911A74122CF027600A10E84 /* NYPlayerTopView.m */,
+				E927449022CF221200B323F9 /* NYRateView.h */,
+				E927448F22CF221200B323F9 /* NYRateView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -338,6 +343,7 @@
 				E911A76522CF027600A10E84 /* UIView+NYFrame.m in Sources */,
 				E911A77022CF027600A10E84 /* NYPlayerView.m in Sources */,
 				E9935E7222CCA524005AFBE3 /* NYVideoCell.m in Sources */,
+				E927449122CF221300B323F9 /* NYRateView.m in Sources */,
 				E911A77522CF027600A10E84 /* NYNetworkSpeedMonitor.m in Sources */,
 				E911A76A22CF027600A10E84 /* NYVideoDetailTransition.m in Sources */,
 				E911A76D22CF027600A10E84 /* NYAVPlayerManager.m in Sources */,

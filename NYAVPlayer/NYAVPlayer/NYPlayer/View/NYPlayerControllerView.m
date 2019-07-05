@@ -12,6 +12,7 @@
 #import "NYSmallView.h"
 #import "NYPlayerGestureControl.h"
 #import "NYVolumeBrightnessView.h"
+#import "NYRateView.h"
 
 #pragma mark - NYPlayerGestureControl手势
 @interface NYPlayerControllerView (NYPlayerGestureControl)
@@ -56,6 +57,8 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
 @property (nonatomic, weak) UIButton *replayBtn;
 /// 底部播放进度
 @property (nonatomic, weak) NYSliderView *bottomProgres;
+/// 倍速控制view
+@property (nonatomic, weak)NYRateView *rateView;
 
 // 0...1.0, where 1.0 is maximum brightness. Only supported by main screen.
 @property (nonatomic) float brightness;
@@ -188,6 +191,12 @@ static NYPlayerControllerView *_shareInstance;
             [self goDetailVCanimated:YES];
         }
         
+    }];
+    /// 倍速按钮点击回掉
+    [self.bottomControllerView setRateBtnClickBlock:^(NYPlayerBottomControllerView * _Nonnull bottomView) {
+        @strongify(self)
+        self.rateView.currentRate = self.currentManager.rate;
+        [self showRateView];
     }];
     
 }
@@ -392,6 +401,22 @@ static NYPlayerControllerView *_shareInstance;
         _bottomProgres.isHideSliderBlock = NO;
     }
     return _bottomProgres;
+}
+-(NYRateView *)rateView{
+    if (!_rateView) {
+        NYRateView *rateView = [[NYRateView alloc] init];
+        [self addSubview:rateView];
+        rateView.hidden = YES;
+        rateView.backgroundColor = NYColorA(0, 0, 0, 0.7);
+        _rateView = rateView;
+        @weakify(self);
+        [rateView setRateBtnClickBlock:^(NYRateView * _Nonnull rateView, UIButton * _Nonnull btn, CGFloat rate) {
+            @strongify(self)
+            self.currentManager.rate = rate;
+            [self hideRateView];
+        }];
+    }
+    return _rateView;
 }
 -(id<NYPlayerMediaPlayback>)currentManager{
     if (!_currentManager) {
@@ -663,7 +688,51 @@ static NYPlayerControllerView *_shareInstance;
     [self removeNotification];
 }
 
+/// 展示倍速控制view
+-(void)showRateView{
+    CGFloat rateH = self.ny_width < self.ny_height ? self.ny_width : self.ny_height;
+    CGFloat rateW = rateH;
+    if (self.playerViewStyle == NYPlayererViewStyleDetail) {
+        rateH = rateH * 0.6;
+        self.rateView.frame = CGRectMake(0, self.ny_height, rateW, rateH);
+        self.rateView.hidden = NO;
+        [UIView animateWithDuration:0.3 animations:^{
+            self.rateView.frame = CGRectMake(0, self.ny_height - rateH, rateW, rateH);
+        } completion:^(BOOL finished) {
+            self.rateView.frame = CGRectMake(0, self.ny_height - rateH, rateW, rateH);
+        }];
+    }else if (self.playerViewStyle == NYPlayererViewStyleFullScreen) {
+        rateW = rateW * 0.6;
+        self.rateView.frame = CGRectMake(self.ny_width, 0, rateW, rateH);
+        self.rateView.hidden = NO;
+        [UIView animateWithDuration:0.3 animations:^{
+            self.rateView.frame = CGRectMake(self.ny_width - rateW, 0, rateW, rateH);
+        } completion:^(BOOL finished) {
+            self.rateView.frame = CGRectMake(self.ny_width - rateW, 0, rateW, rateH);
+        }];
+    }
+}
+/// 隐藏倍速控制view
+-(void)hideRateView{
+
+    if (self.playerViewStyle == NYPlayererViewStyleDetail) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.rateView.ny_y = self.ny_height;
+        } completion:^(BOOL finished) {
+            self.rateView.ny_y = self.ny_height;
+            self.rateView.hidden = YES;
+        }];
+    }else if (self.playerViewStyle == NYPlayererViewStyleFullScreen) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.rateView.ny_x = self.ny_width;
+        } completion:^(BOOL finished) {
+            self.rateView.ny_x = self.ny_width;
+        }];
+    }
+}
+
 @end
+
 
 #pragma mark - 控制层的现实隐藏
 @implementation NYPlayerControllerView(NYControllerShowHidden)
@@ -814,6 +883,12 @@ static NYPlayerControllerView *_shareInstance;
 @implementation NYPlayerControllerView(NYPlayerGestureControl)
 /// 单击手势事件
 - (void)gestureSingleTapped:(NYPlayerGestureControl *)gestureControl {
+    
+    /// 如果当前有倍速view显示 就先隐藏倍速view
+    if (self.rateView.hidden == NO) {
+        [self hideRateView];
+    }
+    
     if (self.playerViewStyle == NYPlayererViewStyleSmall || self.playerViewStyle == NYPlayererViewStyleNone) {
         [self goDetailVCanimated:YES];
     }else if(self.playerViewStyle == NYPlayererViewStyleFullScreen || self.playerViewStyle == NYPlayererViewStyleDetail){
