@@ -21,7 +21,7 @@
 /// 视频总时间
 @property (nonatomic, weak) UILabel *totalTimeLabel;
 /// 滑杆
-@property (nonatomic, weak) NYSliderView *slider;
+@property (nonatomic, strong) NYSliderView *slider;
 
 @end
 @implementation NYPlayerBottomControllerView
@@ -94,7 +94,12 @@
     [self.totalTimeLabel sizeToFit];
     CGFloat totalTimeLabelW = self.totalTimeLabel.ny_width;
     CGFloat totalTimeLabelH = self.totalTimeLabel.ny_height;
-    CGFloat totalTimeLabelX = self.definitionBtn.ny_x - totalTimeLabelW - 14;
+    
+    UIButton *totalAfterBtn = self.definitionBtn;
+    if (self.definitionBtn.hidden) {
+        totalAfterBtn = self.rateBtn;
+    }
+    CGFloat totalTimeLabelX = totalAfterBtn.ny_x - totalTimeLabelW - 14;
     self.totalTimeLabel.frame = CGRectMake(totalTimeLabelX, 0, totalTimeLabelW, totalTimeLabelH);
     self.totalTimeLabel.ny_centerY = self.playOrPauseBtn.ny_centerY;
     

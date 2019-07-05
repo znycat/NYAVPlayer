@@ -13,6 +13,7 @@
 #import "NYPlayerGestureControl.h"
 #import "NYVolumeBrightnessView.h"
 #import "NYRateView.h"
+#import "NYDefintionView.h"
 
 #pragma mark - NYPlayerGestureControl手势
 @interface NYPlayerControllerView (NYPlayerGestureControl)
@@ -56,9 +57,11 @@ static NSString *const NYSmallViewCenterStringKey                   = @"NYSmallV
 /// 中间重播按钮
 @property (nonatomic, weak) UIButton *replayBtn;
 /// 底部播放进度
-@property (nonatomic, weak) NYSliderView *bottomProgres;
+@property (nonatomic, strong) NYSliderView *bottomProgres;
 /// 倍速控制view
 @property (nonatomic, weak)NYRateView *rateView;
+/// 清晰度控制view
+@property (nonatomic, weak)NYDefintionView *defintionView;
 
 // 0...1.0, where 1.0 is maximum brightness. Only supported by main screen.
 @property (nonatomic) float brightness;
@@ -192,11 +195,17 @@ static NYPlayerControllerView *_shareInstance;
         }
         
     }];
+    
     /// 倍速按钮点击回掉
     [self.bottomControllerView setRateBtnClickBlock:^(NYPlayerBottomControllerView * _Nonnull bottomView) {
         @strongify(self)
         self.rateView.currentRate = self.currentManager.rate;
         [self showRateView];
+    }];
+    
+    [self.bottomControllerView setDefinitionBtnClickBlock:^(NYPlayerBottomControllerView * _Nonnull bottomView) {
+        @strongify(self)
+        [self showDefintionView];
     }];
     
 }
@@ -312,7 +321,7 @@ static NYPlayerControllerView *_shareInstance;
         
     }];
 }
-#pragma mark - property
+#pragma mark - property getter
 -(NYPlayerTopView *)topView{
     if (!_topView) {
         NYPlayerTopView *view = [[NYPlayerTopView alloc] init];
@@ -369,14 +378,8 @@ static NYPlayerControllerView *_shareInstance;
     }
     return _volumeBrightnessView;
 }
-
-
 - (float)brightness {
     return [UIScreen mainScreen].brightness;
-}
-- (void)setBrightness:(float)brightness {
-    brightness = MIN(MAX(0, brightness), 1);
-    [UIScreen mainScreen].brightness = brightness;
 }
 - (UIImageView *)coverImageView {
     if (!_coverImageView) {
@@ -417,6 +420,22 @@ static NYPlayerControllerView *_shareInstance;
         }];
     }
     return _rateView;
+}
+-(NYDefintionView *)defintionView {
+    if (!_defintionView) {
+        NYDefintionView *defintionView = [[NYDefintionView alloc] init];
+        [self addSubview:defintionView];
+        defintionView.hidden = YES;
+        defintionView.backgroundColor = NYColorA(0, 0, 0, 0.7);
+        _defintionView = defintionView;
+        @weakify(self);
+        [defintionView setDefintionBtnClickBlock:^(NYDefintionView * _Nonnull defintionView, NYDefinitionModel * _Nonnull model) {
+            @strongify(self)
+            self.currentManager.assetURL = [NSURL URLWithString:model.urlStr];
+            [self hideDefintionView];
+        }];
+    }
+    return _defintionView;
 }
 -(id<NYPlayerMediaPlayback>)currentManager{
     if (!_currentManager) {
@@ -491,6 +510,24 @@ static NYPlayerControllerView *_shareInstance;
     }
     return _gestureControl;
 }
+
+
+#pragma mark - property setter
+- (void)setBrightness:(float)brightness {
+    brightness = MIN(MAX(0, brightness), 1);
+    [UIScreen mainScreen].brightness = brightness;
+}
+-(void)setDefinitionModels:(NSArray<NYDefinitionModel *> *)definitionModels{
+    _definitionModels = definitionModels;
+    self.defintionView.definitionModels = definitionModels;
+    if (definitionModels.count) {
+        self.bottomControllerView.definitionBtn.hidden = NO;
+        self.bottomControllerView.rateBtn.hidden = YES;
+    }else{
+        self.bottomControllerView.definitionBtn.hidden = YES;
+        self.bottomControllerView.rateBtn.hidden = NO;
+    }
+}
 -(void)setPlayerViewStyle:(NYPlayererViewStyle)playerViewStyle{
     _playerViewStyle = playerViewStyle;
     if (playerViewStyle == NYPlayererViewStyleNone) {
@@ -516,6 +553,12 @@ static NYPlayerControllerView *_shareInstance;
         
         self.bottomControllerView.hidden = NO;
         self.bottomControllerView.rateBtn.hidden = NO;
+        if (self.definitionModels.count) {
+            self.bottomControllerView.definitionBtn.hidden = NO;
+        }else{
+            self.bottomControllerView.definitionBtn.hidden = YES;
+        }
+        
         self.bottomControllerView.frame = self.bottomControllerView.frame;
         self.bottomControllerView.fullScreenBtn.selected = YES;
     }else if (playerViewStyle == NYPlayererViewStyleDetail) {//竖屏 详情状态
@@ -524,9 +567,15 @@ static NYPlayerControllerView *_shareInstance;
         self.topView.smallBtn.hidden = NO;
         
         self.bottomControllerView.hidden = NO;
-        self.bottomControllerView.rateBtn.hidden = YES;
         self.bottomControllerView.frame = self.bottomControllerView.frame;
         self.bottomControllerView.fullScreenBtn.selected = NO;
+        if (self.definitionModels.count) {
+            self.bottomControllerView.definitionBtn.hidden = NO;
+            self.bottomControllerView.rateBtn.hidden = YES;
+        }else{
+            self.bottomControllerView.definitionBtn.hidden = YES;
+            self.bottomControllerView.rateBtn.hidden = NO;
+        }
     }
     
     if (playerViewStyle == NYPlayererViewStyleSmall) {//小窗状态
@@ -692,6 +741,8 @@ static NYPlayerControllerView *_shareInstance;
     self.volumeBrightnessView.hidden = YES;
     self.replayBtn.hidden = YES;
     [self removeNotification];
+    //清晰度设置
+    self.definitionModels = @[];
 }
 
 /// 展示倍速控制view
@@ -737,6 +788,48 @@ static NYPlayerControllerView *_shareInstance;
     }
 }
 
+/// 展示清晰度控制view
+-(void)showDefintionView{
+    CGFloat rateH = self.ny_width < self.ny_height ? self.ny_width : self.ny_height;
+    CGFloat rateW = rateH;
+    if (self.playerViewStyle == NYPlayererViewStyleDetail) {
+        rateH = rateH;
+        self.defintionView.frame = CGRectMake(0, self.ny_height, rateW, rateH);
+        self.defintionView.hidden = NO;
+        [UIView animateWithDuration:0.3 animations:^{
+            self.defintionView.frame = CGRectMake(0, self.ny_height - rateH, rateW, rateH);
+        } completion:^(BOOL finished) {
+            self.defintionView.frame = CGRectMake(0, self.ny_height - rateH, rateW, rateH);
+        }];
+    }else if (self.playerViewStyle == NYPlayererViewStyleFullScreen) {
+        rateW = rateW;
+        self.defintionView.frame = CGRectMake(self.ny_width, 0, rateW, rateH);
+        self.defintionView.hidden = NO;
+        [UIView animateWithDuration:0.3 animations:^{
+            self.defintionView.frame = CGRectMake(self.ny_width - rateW, 0, rateW, rateH);
+        } completion:^(BOOL finished) {
+            self.defintionView.frame = CGRectMake(self.ny_width - rateW, 0, rateW, rateH);
+        }];
+    }
+}
+/// 隐藏清晰度控制view
+-(void)hideDefintionView{
+    
+    if (self.playerViewStyle == NYPlayererViewStyleDetail) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.defintionView.ny_y = self.ny_height;
+        } completion:^(BOOL finished) {
+            self.defintionView.ny_y = self.ny_height;
+            self.defintionView.hidden = YES;
+        }];
+    }else if (self.playerViewStyle == NYPlayererViewStyleFullScreen) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.defintionView.ny_x = self.ny_width;
+        } completion:^(BOOL finished) {
+            self.defintionView.ny_x = self.ny_width;
+        }];
+    }
+}
 @end
 
 
@@ -893,6 +986,10 @@ static NYPlayerControllerView *_shareInstance;
     /// 如果当前有倍速view显示 就先隐藏倍速view
     if (self.rateView.hidden == NO) {
         [self hideRateView];
+    }
+    /// 如果当前有清晰度view显示 就先隐藏倍速view
+    if (self.defintionView.hidden == NO) {
+        [self hideDefintionView];
     }
     
     if (self.playerViewStyle == NYPlayererViewStyleSmall || self.playerViewStyle == NYPlayererViewStyleNone) {

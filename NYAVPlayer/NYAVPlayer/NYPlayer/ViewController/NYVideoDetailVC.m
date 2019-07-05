@@ -68,6 +68,16 @@
 }
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NYDefinitionModel *model = [NYDefinitionModel new];
+        model.title = @"标清";
+        model.isSelected = YES;
+        model.urlStr = @"http://tb-video.bdstatic.com/tieba-smallvideo/12_cc75b3fb04b8a23546d62e3f56619e85.mp4";
+        NYDefinitionModel *model2 = [NYDefinitionModel new];
+        model2.title = @"高清";
+        model2.urlStr = @"http://tb-video.bdstatic.com/tieba-smallvideo/5_6d3243c354755b781f6cc80f60756ee5.mp4";
+        NYSharePlayer.definitionModels = @[model, model2];
+    });
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];

@@ -29,6 +29,8 @@
 		E911A77522CF027600A10E84 /* NYNetworkSpeedMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = E911A76122CF027600A10E84 /* NYNetworkSpeedMonitor.m */; };
 		E911A77622CF027600A10E84 /* ZFReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E911A76222CF027600A10E84 /* ZFReachabilityManager.m */; };
 		E927449122CF221300B323F9 /* NYRateView.m in Sources */ = {isa = PBXBuildFile; fileRef = E927448F22CF221200B323F9 /* NYRateView.m */; };
+		E927449522CF398800B323F9 /* NYDefinitionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E927449422CF398800B323F9 /* NYDefinitionModel.m */; };
+		E927449822CF3C4700B323F9 /* NYDefintionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E927449722CF3C4700B323F9 /* NYDefintionView.m */; };
 		E93AE92E22C61D4200A33805 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE92D22C61D4200A33805 /* AppDelegate.m */; };
 		E93AE93122C61D4200A33805 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E93AE93022C61D4200A33805 /* ViewController.m */; };
 		E93AE93422C61D4200A33805 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E93AE93222C61D4200A33805 /* Main.storyboard */; };
@@ -82,6 +84,10 @@
 		E911A76222CF027600A10E84 /* ZFReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFReachabilityManager.m; sourceTree = "<group>"; };
 		E927448F22CF221200B323F9 /* NYRateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NYRateView.m; sourceTree = "<group>"; };
 		E927449022CF221200B323F9 /* NYRateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NYRateView.h; sourceTree = "<group>"; };
+		E927449322CF398800B323F9 /* NYDefinitionModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYDefinitionModel.h; sourceTree = "<group>"; };
+		E927449422CF398800B323F9 /* NYDefinitionModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYDefinitionModel.m; sourceTree = "<group>"; };
+		E927449622CF3C4700B323F9 /* NYDefintionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NYDefintionView.h; sourceTree = "<group>"; };
+		E927449722CF3C4700B323F9 /* NYDefintionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NYDefintionView.m; sourceTree = "<group>"; };
 		E93AE92922C61D4200A33805 /* NYAVPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYAVPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E93AE92C22C61D4200A33805 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E93AE92D22C61D4200A33805 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -144,6 +150,8 @@
 				E911A74122CF027600A10E84 /* NYPlayerTopView.m */,
 				E927449022CF221200B323F9 /* NYRateView.h */,
 				E927448F22CF221200B323F9 /* NYRateView.m */,
+				E927449622CF3C4700B323F9 /* NYDefintionView.h */,
+				E927449722CF3C4700B323F9 /* NYDefintionView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -216,6 +224,8 @@
 		E927449222CF395700B323F9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E927449322CF398800B323F9 /* NYDefinitionModel.h */,
+				E927449422CF398800B323F9 /* NYDefinitionModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -341,6 +351,7 @@
 				E911A77122CF027600A10E84 /* NYVolumeBrightnessView.m in Sources */,
 				E93AE93122C61D4200A33805 /* ViewController.m in Sources */,
 				E911A77422CF027600A10E84 /* NYKVOController.m in Sources */,
+				E927449522CF398800B323F9 /* NYDefinitionModel.m in Sources */,
 				E911A76622CF027600A10E84 /* NYPlayerBottomControllerView.m in Sources */,
 				E911A76B22CF027600A10E84 /* NYVideoDetailVC.m in Sources */,
 				E911A77622CF027600A10E84 /* ZFReachabilityManager.m in Sources */,
@@ -349,6 +360,7 @@
 				E911A77322CF027600A10E84 /* NYSliderView.m in Sources */,
 				E911A76422CF027600A10E84 /* NYPlayerGestureControl.m in Sources */,
 				E911A76522CF027600A10E84 /* UIView+NYFrame.m in Sources */,
+				E927449822CF3C4700B323F9 /* NYDefintionView.m in Sources */,
 				E911A77022CF027600A10E84 /* NYPlayerView.m in Sources */,
 				E9935E7222CCA524005AFBE3 /* NYVideoCell.m in Sources */,
 				E927449122CF221300B323F9 /* NYRateView.m in Sources */,

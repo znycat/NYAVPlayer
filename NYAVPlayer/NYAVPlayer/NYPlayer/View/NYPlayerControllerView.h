@@ -11,6 +11,7 @@
 #import "NYPlayerBottomControllerView.h"
 #import "NYVideoFullScreenVC.h"
 #import "NYVideoDetailVC.h"
+#import "NYDefinitionModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 /** NYPlayerControllerView 的tag*/
@@ -32,10 +33,11 @@ typedef NS_ENUM(NSUInteger, NYPlayererViewStyle) {
 /// 底部播放进度
 @property (nonatomic, weak, readonly) NYSliderView *bottomProgres;
 @property(nonatomic,assign,readonly)NYPlayererViewStyle playerViewStyle;
-
 @property (nonatomic, strong, readonly) id <NYPlayerMediaPlayback> currentManager;
 
 + (instancetype)sharePlayer;
+
+@property (nonatomic,strong)NSArray <NYDefinitionModel *> *definitionModels;
 
 /// 控制层自动隐藏的时间，默认2.5秒
 @property (nonatomic, assign) NSTimeInterval autoHiddenTimeInterval;
